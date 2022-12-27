@@ -1,0 +1,45 @@
+@import '../../styles/var.scss';
+
+.index {
+  padding: 26px;
+  &__swiper {
+    // border-radius: $border-radius-lg;
+    // overflow: hidden;
+    margin-bottom: 40px;
+  }
+  &__course {
+    border-radius: $border-radius-lg;
+    background: $white;
+    &-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      padding: 20px;
+    }
+    &-content {
+      padding: 0 20px;
+    }
+
+    &-item {
+      margin-bottom: 12px;
+    }
+    &-info {
+      padding: 10px 0;
+    }
+    &-name {
+      font-size: $font-size-xs;
+    }
+    &-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: $font-size-sm;
+    }
+    &-time {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+
+  }
+}

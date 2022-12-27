@@ -1,0 +1,9 @@
+@import './styles/var.scss';
+
+
+page {
+  font-family: $base-font-family;
+  background: $pageBack;
+  font-size: 28px;
+  color: $black;
+}
