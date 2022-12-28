@@ -29,7 +29,7 @@ const config = {
         enable: true,
         config: {
           onePxTransforms: true,
-          selectorBlackList: [/van-/],
+          // selectorBlackList: [/van-/],
         }
       },
       url: {

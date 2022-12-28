@@ -2,7 +2,9 @@ export default defineAppConfig({
   pages: [
     'pages/index/index',
     'pages/task/index',
-    'pages/my/index'
+    'pages/my/index',
+    'pages/taskList/index',
+    'pages/taskDetail/index'
   ],
   window: {
     backgroundTextStyle: 'light',

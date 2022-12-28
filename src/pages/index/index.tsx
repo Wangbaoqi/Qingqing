@@ -6,7 +6,9 @@ import {
   Button,
   Image,
   Swiper, SwiperItem,
-  Row, Col
+  Row, Col,
+  CellGroup, Cell,
+  Tag
 } from '@antmjs/vantui'
 
 import './index.scss'
@@ -93,13 +95,39 @@ export default function Index() {
       </View>
 
 
-      <View className='index__task'>
+      <View className='index__task mb-10'>
+        <View className='index__task-title'>
+          <Text>待处理任务</Text>
+        </View>
+        <View className='index__task-content mb-3'>
+          <View className='index__task-box'>
+            <View className='index__task-name mb-5'>
+              <Text className='mr-5'>张扣扣</Text>
+              <Text>五年级一班</Text>
+            </View>
+            <View className='index__task-list pb-3'>
+              <View className='index__task-item flex justify-between relative'>
+                <Image src={images[0]} radius='8' fit='cover' width='60px' height='60px' />
+                <View className='index__task-center absolute flex flex-column justify-between ml-5'>
+                  <View className='index__task-text flex item-center gap-4'>
+                    <Text className='text-sm truncate'>任务名称大方</Text>
+                    <Tag plain type='primary'>标签</Tag>
+                  </View>
+                  <Text className='text-xs truncate'>任务描述</Text>
+                </View>
+                <View className='index__task-right flex item-center'>
+                  20分钟
+                </View>
+              </View>
 
+            </View>
+          </View>
+        </View>
       </View>
 
       <View className='index__course'>
         <View className='index__course-title'>
-          <Text>精品课程</Text>
+          <Text>我的课程</Text>
         </View>
         <View className='index__course-content'>
           <Row gutter='30'>
@@ -107,28 +135,24 @@ export default function Index() {
               courses.map((course, idx) => (
                 <Col span='12' key={`course${idx}`}>
                   <View className='index__course-item' >
-                  <Image round radius='8' src={course.img} fit='cover' width='100%' height='160px' />
-                  <View className='index__course-info'>
-                    <View className='index__course-name'>{course.title}</View>
-                    <View className='index__course-detail'>
-                      <Text>{course.time}</Text>
-                      <View className='index__course-time'>
-                        {/* <Text>{course.time}</Text> */}
-                        <Text>{course.category}</Text>
+                    <Image round radius='8' src={course.img} fit='cover' width='100%' height='160px' />
+                    <View className='index__course-info'>
+                      <View className='index__course-name'>{course.title}</View>
+                      <View className='index__course-detail'>
+                        <Text>{course.time}</Text>
+                        <View className='index__course-time'>
+                          {/* <Text>{course.time}</Text> */}
+                          <Text>{course.category}</Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
                 </Col>
-
               ))
             }
           </Row>
-
         </View>
       </View>
-
-
     </View>
   )
 }

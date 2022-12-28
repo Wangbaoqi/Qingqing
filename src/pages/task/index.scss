@@ -1,0 +1,27 @@
+@import '../../styles/var.scss';
+
+
+.task {
+  padding: 26px;
+  &__will {
+    border-radius: $border-radius-lg;
+    background: $white;
+
+    &-title {
+      font-weight: $font-weight-bold;
+      padding: 20px;
+    }
+    &-more {
+      color: $gray-7;
+      font-weight: $font-weight-base;
+    }
+    &-item {
+      height: 240px;
+    }
+  }
+}
+
+
+page {
+  --tag-font-size: 20rpx
+}

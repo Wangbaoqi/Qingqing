@@ -1,0 +1,66 @@
+@import '../../styles/var.scss';
+
+
+.task-detail {
+  padding: 26px;
+  &__card {
+    border-radius: $border-radius-lg;
+    background: $white;
+    overflow: hidden;
+  }
+  &__extend {
+    border-radius: $border-radius-lg;
+    background: $white;
+  }
+
+  &__step {
+    &-icon {
+      position: relative;
+      padding-left: 20px;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0px;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        background-color: #fff;
+        box-shadow: 0 0 0 2px $gray-7;
+        border-radius: 50%;
+        margin: auto;
+        z-index: 9;
+      }
+      // &::after {
+      //   content: '';
+      //   position: absolute;
+      //   top: 12px;
+      //   left: 5.7px;
+      //   width: 2px;
+      //   height: 100%;
+      //   background-color: $gray-6;
+      //   z-index: 8;
+      // }
+    }
+    &-content {
+      position: relative;
+      padding-left: 30px;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0px;
+        left: 5.7px;
+        width: 2px;
+        height: 100%;
+        background-color: $gray-4;
+        z-index: 8;
+      }
+    }
+
+  }
+}
+
+
+page {
+  --tag-font-size: 20rpx
+}
