@@ -1,0 +1,11 @@
+@import '../../styles/var.scss';
+
+
+.evaluation {
+  padding: 26px;
+  &__card {
+    border-radius: $border-radius-lg;
+    background: $white;
+    overflow: hidden;
+  }
+}

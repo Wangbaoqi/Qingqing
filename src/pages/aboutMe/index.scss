@@ -1,0 +1,14 @@
+@import '../../styles/var.scss';
+
+.about-me {
+  position: relative;
+  background: $white;
+  height: 100vh;
+  &__card {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $white;
+  }
+}

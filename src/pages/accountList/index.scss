@@ -1,0 +1,40 @@
+@import '../../styles/var.scss';
+
+.account {
+  padding: 26px;
+
+  &__card {
+    border-radius: $border-radius-lg;
+    background: $white;
+    overflow: hidden;
+  }
+
+
+  &__item {
+    position: relative;
+    border: 2px solid $gray-5;
+    border-radius: $border-radius-md;
+  }
+  &__check {
+    border: 2px solid $green;
+  }
+  &__add {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid $gray-4;
+  }
+  &__icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+
+page {
+  --tag-font-size: 20px;
+  --button-line-height: 136px;
+  --button-normal-height: 132px;
+}

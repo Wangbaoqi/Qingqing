@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
-import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 
 import {
   Button,
@@ -70,7 +70,13 @@ export default function Index() {
 
   useDidHide(() => { })
 
-  const onChange = (e) => {}
+  const onChange = (e) => { }
+
+  const navigateToTaskDetail = () => {
+    Taro.navigateTo({
+      url: '/pages/taskDetail/index'
+    })
+  }
 
 
   return (
@@ -106,7 +112,7 @@ export default function Index() {
               <Text>五年级一班</Text>
             </View>
             <View className='index__task-list pb-3'>
-              <View className='index__task-item flex justify-between relative'>
+              <View className='index__task-item flex justify-between relative' onClick={() => navigateToTaskDetail()}>
                 <Image src={images[0]} radius='8' fit='cover' width='60px' height='60px' />
                 <View className='index__task-center absolute flex flex-column justify-between ml-5'>
                   <View className='index__task-text flex item-center gap-4'>

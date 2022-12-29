@@ -4,7 +4,12 @@ export default defineAppConfig({
     'pages/task/index',
     'pages/my/index',
     'pages/taskList/index',
-    'pages/taskDetail/index'
+    'pages/taskDetail/index',
+    'pages/evaluation/index',
+    'pages/accountList/index',
+    'pages/personInfo/index',
+    'pages/aboutMe/index',
+    'pages/login/index'
   ],
   window: {
     backgroundTextStyle: 'light',

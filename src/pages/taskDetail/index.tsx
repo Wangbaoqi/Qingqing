@@ -1,6 +1,6 @@
 import { Component, useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
-import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
   Image,
@@ -12,7 +12,6 @@ import {
 } from '@antmjs/vantui'
 
 import './index.scss'
-import Task from '../task'
 
 export default function TaskDetail() {
 
@@ -67,6 +66,13 @@ export default function TaskDetail() {
 
   useDidHide(() => { })
 
+
+  const navigateToEvaluate = () => {
+    Taro.navigateTo({
+      url: '/pages/evaluation/index'
+    })
+  }
+
   return (
     <View className='task-detail'>
       <View className='task-detail__card mb-5'>
@@ -117,7 +123,7 @@ export default function TaskDetail() {
         </View>
       </View>
 
-      <Button color='#0DB336' block className='mb-10'>
+      <Button color='#0DB336' block className='mb-10' onClick={() => navigateToEvaluate()}>
         去评价
       </Button>
     </View>
