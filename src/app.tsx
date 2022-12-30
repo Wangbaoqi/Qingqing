@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { useDidHide, useDidShow } from '@tarojs/taro'
+import { Provider } from 'react-redux'
+import configStore from '@/store/index'
 
 import './app.scss'
 
-function App(props) {
+const store = configStore();
 
+function App(props) {
 
   useEffect(() => {
 
@@ -13,7 +16,6 @@ function App(props) {
     } catch (error) {
 
     }
-
 
   }, [])
 
@@ -25,8 +27,13 @@ function App(props) {
     console.log('did hide')
   })
 
-
-  return props.children
+  return (
+    <Provider store={store}>
+      {props.children}
+    </Provider>
+  )
 }
 
 export default App
+
+

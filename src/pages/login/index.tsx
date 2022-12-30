@@ -52,17 +52,17 @@ export default function Login() {
           <CellGroup>
             <Field
               clearable
-              value={studentName}
-              label='用户名'
+              value={studentCode}
+              label='学籍号'
               placeholder='请输入学籍号'
-              onChange={(e) => setStudentName(e.detail)}
+              onChange={(e) => setStudentCode(e.detail)}
             />
             <Field
-              value={studentCode}
-              label='密码'
+              value={studentName}
+              label='姓名'
               placeholder='请输入姓名'
               border
-              onChange={(e) => setStudentCode(e.detail)}
+              onChange={(e) => setStudentName(e.detail)}
             />
           </CellGroup>
           <View className='p-10 pb-0'>

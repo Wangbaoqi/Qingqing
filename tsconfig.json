@@ -28,6 +28,11 @@
       "@/service/*": ["./src/service/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/config/*": ["./src/config/*"],
+      "@/reducers/*": ["./src/reducers/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/actions/*": ["./src/actions/*"],
+      "@/constants/*": ["./src/constants/*"],
+      "@/interface/*": ["./src/interface/*"],
 
     }
   },

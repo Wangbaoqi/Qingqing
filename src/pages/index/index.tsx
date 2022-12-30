@@ -1,25 +1,35 @@
 import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import {
   Image,
   Tag,
   Swiper, SwiperItem,
   Row, Col,
 } from '@antmjs/vantui'
-
 import { checkLogin, login } from '@/utils/request/user'
 import { wxLinkStudents } from '@/service/auth'
+import { fetchStudents } from '@/actions/user'
+import { SET_USERINFO } from "@/constants/user";
+import { IUser } from "@/interface/user";
 
 import './index.scss'
 
 export default function Index() {
+  const dispatch = useDispatch();
+  const store = useStore();
+
+  // const userInfo = useSelector((state) => state.user )
+
   const [initPage1, setInitPage1] = useState(0)
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
     'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',
     'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
   ]
+
+
 
   const courses = [
     {
@@ -59,13 +69,16 @@ export default function Index() {
     }
   ]
 
+
   useEffect(() => {
-    checkUserStatus()
   }, [])
 
   useReady(() => { })
 
-  useDidShow(() => { })
+  useDidShow(() => {
+    checkUserStatus()
+
+  })
 
   useDidHide(() => { })
 
@@ -79,8 +92,16 @@ export default function Index() {
       if (!isValid) {
         await login();
       }
-      const students = await wxLinkStudents();
-      console.log(students, 'students' );
+      // const students = await wxLinkStudents();
+      // console.log(students, 'students' );
+
+      const userInfo = {
+        avatarId: 1
+      }
+      dispatch({ type: SET_USERINFO, payload: { userInfo } })
+
+      console.log(store.getState(), 'store');
+
     } catch (error) {
       console.log(error, 'ee');
 
@@ -142,7 +163,6 @@ export default function Index() {
                   20分钟
                 </View>
               </View>
-
             </View>
           </View>
         </View>
