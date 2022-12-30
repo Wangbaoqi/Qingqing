@@ -1,16 +1,11 @@
-import { Component, useEffect } from 'react'
-import { View, Text } from '@tarojs/components'
+import { useEffect } from 'react'
+import { View } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
   Image,
-  Icon,
-  Steps,
-  Row, Col,
-  CellGroup, Cell,
   Tag
 } from '@antmjs/vantui'
-
 import './index.scss'
 
 export default function TaskDetail() {

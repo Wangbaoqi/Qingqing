@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
-  SwipeCell,
   Button,
-  Icon,
   Image,
-  Tag
+  Tag,
+  SwipeCell,
+  Icon,
 } from '@antmjs/vantui'
 import './index.scss'
 

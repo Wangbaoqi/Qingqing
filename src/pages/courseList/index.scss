@@ -1,0 +1,35 @@
+@import '../../styles/var.scss';
+
+
+.course-list {
+  padding: 26px;
+  &__course {
+    border-radius: $border-radius-lg;
+    background: $white;
+    &-content {
+      padding: 40px 20px;
+    }
+    &-item {
+      margin-bottom: 12px;
+    }
+    &-info {
+      padding: 10px 0;
+    }
+    &-name {
+      font-size: $font-size-md;
+    }
+    &-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: $font-size-xs;
+      margin-top: 10px;
+    }
+    &-time {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+  }
+}

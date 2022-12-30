@@ -2,13 +2,9 @@ import { Component, useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
 import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
-  Button,
+  Image,
   Cell,
   CellGroup,
-  Field,
-  Icon,
-  Image,
-  Tag
 } from '@antmjs/vantui'
 
 import './index.scss'

@@ -1,18 +1,13 @@
-import { Component, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
   Image,
-  Icon,
-  Steps,
-  Row, Col,
-  CellGroup, Cell,
   Tag,
   Uploader,
   Rate
 } from '@antmjs/vantui'
-
 import './index.scss'
 
 export default function Evaluation() {

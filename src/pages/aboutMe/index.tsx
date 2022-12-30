@@ -2,8 +2,8 @@ import { View } from '@tarojs/components'
 import {
   Image,
 } from '@antmjs/vantui'
-import logo from '../../images/logo.jpg'
 import './index.scss'
+import logo from '../../images/logo.jpg'
 
 export default function AboutMe() {
   return (

@@ -3,13 +3,10 @@ import { View, Text } from '@tarojs/components'
 import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 
 import {
-  Button,
   Image,
+  Tag,
   Icon,
-  Swiper, SwiperItem,
   Row, Col,
-  CellGroup, Cell,
-  Tag
 } from '@antmjs/vantui'
 import './index.scss'
 

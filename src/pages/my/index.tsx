@@ -1,14 +1,11 @@
-import { Component, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
-  Popup,
   Image,
   Icon,
-  Swiper, SwiperItem,
   Row, Col,
-  CellGroup, Cell,
-  Picker
+  Cell,
 } from '@antmjs/vantui'
 import './index.scss'
 
@@ -61,6 +58,30 @@ export default function My() {
     })
   }
 
+  const onNavigateToCourseList = () => {
+    Taro.navigateTo({
+      url:'/pages/courseList/index'
+    })
+  }
+
+  const onNavigateToWillTask = () => {
+    Taro.navigateTo({
+      url:'/pages/taskList/index'
+    })
+  }
+
+  const onNavigateToDoneTask = () => {
+    Taro.navigateTo({
+      url:'/pages/taskList/index'
+    })
+  }
+
+  const onNavigateToAllTask = () => {
+    Taro.switchTab({
+      url: '/pages/task/index'
+    })
+  }
+
   return (
     <View className='my'>
 
@@ -77,25 +98,25 @@ export default function My() {
       <View className='my__card p-5 mb-5'>
         <Row gutter=''>
           <Col span='6'>
-            <View className='my__card-item flex flex-column item-center gap-2'>
+            <View className='my__card-item flex flex-column item-center gap-2' onClick={onNavigateToCourseList}>
               <Icon name='todo-list-o' size='30px' color='#39b54a'></Icon>
               <Text className='text-sm'>我的课程</Text>
             </View>
           </Col>
           <Col span='6'>
-            <View className='my__card-item flex flex-column item-center gap-2'>
+            <View className='my__card-item flex flex-column item-center gap-2' onClick={onNavigateToWillTask}>
               <Icon name='records' size='30px' color='#39b54a'></Icon>
               <Text className='text-sm'>待完成</Text>
             </View>
           </Col>
           <Col span='6'>
-            <View className='my__card-item flex flex-column item-center gap-2'>
+            <View className='my__card-item flex flex-column item-center gap-2' onClick={onNavigateToDoneTask}>
               <Icon name='completed' size='30px' color='#39b54a'></Icon>
               <Text className='text-sm'>已完成</Text>
             </View>
           </Col>
           <Col span='6'>
-            <View className='my__card-item flex flex-column item-center gap-2'>
+            <View className='my__card-item flex flex-column item-center gap-2' onClick={onNavigateToAllTask}>
               <Icon name='orders-o' size='30px' color='#39b54a'></Icon>
               <Text className='text-sm'>全部任务</Text>
             </View>

@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
-
 import {
-  Button,
   Image,
+  Tag,
   Swiper, SwiperItem,
   Row, Col,
-  CellGroup, Cell,
-  Tag
 } from '@antmjs/vantui'
 
-import './index.scss'
+import { checkLogin, login } from '@/utils/request/user'
+import { wxLinkStudents } from '@/service/auth'
 
+import './index.scss'
 
 export default function Index() {
   const [initPage1, setInitPage1] = useState(0)
@@ -61,7 +60,7 @@ export default function Index() {
   ]
 
   useEffect(() => {
-
+    checkUserStatus()
   }, [])
 
   useReady(() => { })
@@ -69,6 +68,24 @@ export default function Index() {
   useDidShow(() => { })
 
   useDidHide(() => { })
+
+  const checkUserStatus = async () => {
+
+    console.log('check');
+
+    try {
+      const isValid = await checkLogin();
+      console.log(isValid, 'isValid');
+      if (!isValid) {
+        await login();
+      }
+      const students = await wxLinkStudents();
+      console.log(students, 'students' );
+    } catch (error) {
+      console.log(error, 'ee');
+
+    }
+  }
 
   const onChange = (e) => { }
 

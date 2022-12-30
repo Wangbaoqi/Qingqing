@@ -1,24 +1,30 @@
-import { Component } from 'react'
+import { useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
+import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import {
+  Button,
+  Image,
+  CellGroup,
+  Field,
+} from '@antmjs/vantui'
 import './index.scss'
 
-export default class Coursedetail extends Component {
+export default function CourseDetail() {
 
-  componentWillMount () { }
 
-  componentDidMount () { }
+  useEffect(() => {
 
-  componentWillUnmount () { }
+  }, [])
 
-  componentDidShow () { }
+  useReady(() => { })
 
-  componentDidHide () { }
+  useDidShow(() => { })
 
-  render () {
-    return (
-      <View className='courseDetail'>
-        <Text>Hello world!</Text>
-      </View>
-    )
-  }
+  useDidHide(() => { })
+
+  return (
+    <View className='course-list'>
+
+    </View>
+  )
 }

@@ -5,7 +5,14 @@ import './app.scss'
 
 function App(props) {
 
+
   useEffect(() => {
+
+    try {
+
+    } catch (error) {
+
+    }
 
 
   }, [])
@@ -17,6 +24,7 @@ function App(props) {
   useDidHide(() => {
     console.log('did hide')
   })
+
 
   return props.children
 }

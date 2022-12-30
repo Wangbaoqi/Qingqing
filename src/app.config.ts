@@ -5,6 +5,8 @@ export default defineAppConfig({
     'pages/my/index',
     'pages/taskList/index',
     'pages/taskDetail/index',
+    'pages/courseList/index',
+    'pages/courseDetail/index',
     'pages/evaluation/index',
     'pages/accountList/index',
     'pages/personInfo/index',

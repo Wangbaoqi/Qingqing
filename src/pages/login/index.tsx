@@ -1,19 +1,22 @@
-import { Component, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
+  Image,
   CellGroup,
   Field,
-  Icon,
-  Image,
-  Tag
 } from '@antmjs/vantui'
 
-import logo from '../../images/logo.jpg'
+import { wxBindStudent } from '@/service/auth'
+
 import './index.scss'
+import logo from '../../images/logo.jpg'
 
 export default function Login() {
+
+  const [studentName, setStudentName] = useState('')
+  const [studentCode, setStudentCode] = useState('')
 
 
   useEffect(() => {
@@ -25,6 +28,17 @@ export default function Login() {
   useDidShow(() => { })
 
   useDidHide(() => { })
+
+
+  const addAccount = () => {
+    wxBindStudent({
+      studentCode,
+      studentName
+    }).then(res => {
+      console.log(res);
+
+    })
+  }
 
   return (
     <View className='login'>
@@ -38,18 +52,21 @@ export default function Login() {
           <CellGroup>
             <Field
               clearable
+              value={studentName}
               label='用户名'
-              placeholder='请输入学生账号'
+              placeholder='请输入学籍号'
+              onChange={(e) => setStudentName(e.detail)}
             />
             <Field
-              type='password'
+              value={studentCode}
               label='密码'
-              placeholder='请输入账号密码'
+              placeholder='请输入姓名'
               border
+              onChange={(e) => setStudentCode(e.detail)}
             />
           </CellGroup>
           <View className='p-10 pb-0'>
-            <Button color='#39b54a' block >添加</Button>
+            <Button color='#39b54a' block onClick={addAccount}>添加</Button>
           </View>
         </View>
       </View>
