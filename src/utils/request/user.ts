@@ -55,20 +55,20 @@ export const wxLogin = () => {
 }
 
 
-export const login = () => {
+export const login = (): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     return wxLogin().then((res: LoginResponse) => {
       wxUserLogin({
         code: res.code,
       }).then((user: UserInfo) => {
-        Taro.setStorageSync('openId', user.openId)
-        Taro.setStorageSync('token', user.token)
-        resolve(true)
+        Taro.setStorageSync('openId', user.openId);
+        Taro.setStorageSync('token', user.token);
+        resolve(true);
       }).catch(err => {
         console.log(err, '登录失败');
-        reject(false)
-      })
-    })
+        reject(false);
+      });
+    });
   })
 }
 

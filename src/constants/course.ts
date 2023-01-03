@@ -1,2 +1,1 @@
-export const ADD = 'ADD'
-export const MINUS = 'MINUS'
+export const SET_COURSE_INFO = 'SET_COURSE_INFO'

@@ -1,20 +1,27 @@
-import { ADD, MINUS } from '@/constants/course'
+import { SET_COURSE_INFO } from '@/constants/course'
 
 const INITIAL_STATE = {
-  num: 0,
+  authorName: '',
+  backgroundImageFileUrl: '',
+  classification: '',
+  companySrcId: 0,
+  description: '',
+  duration: 0,
+  id: 0,
+  name: '',
+  origin: '',
+  period: '',
+  scene: '',
+  tag: '',
+  type: '',
 }
 
 export default function course(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case ADD:
+    case SET_COURSE_INFO:
       return {
         ...state,
-        num: state.num + 1,
-      }
-    case MINUS:
-      return {
-        ...state,
-        num: state.num - 1,
+        ...action.payload
       }
     default:
       return state

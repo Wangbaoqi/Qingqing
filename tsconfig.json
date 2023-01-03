@@ -33,6 +33,7 @@
       "@/actions/*": ["./src/actions/*"],
       "@/constants/*": ["./src/constants/*"],
       "@/interface/*": ["./src/interface/*"],
+      "@/hooks/*": ["./src/hooks/*"],
 
     }
   },

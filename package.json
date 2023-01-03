@@ -37,6 +37,7 @@
   "dependencies": {
     "@antmjs/vantui": "^2.4.0",
     "@babel/runtime": "^7.7.7",
+    "@reduxjs/toolkit": "^1.9.1",
     "@tarojs/components": "3.5.2",
     "@tarojs/helper": "3.5.2",
     "@tarojs/plugin-framework-react": "3.5.2",

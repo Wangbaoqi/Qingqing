@@ -1,25 +1,20 @@
-import { SET_USERINFO } from "@/constants/user";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from "@/interface/user";
 
-const INITIAL_STATE: IUser = {
-  avatarId: 0,
-  avatarUrl: '',
-  birthday: new Date(),
-  className: '',
-  gender: '',
-  id: 0,
-  parentPhoneNum: '',
-  studentCode: '',
-  studentName: '',
+const initialState = {
+  userInfo: {}
+
 }
 
-export default function user(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case SET_USERINFO: {
-      const { userInfo } = action.payload;
-      return { ...state, ...userInfo}
+export const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    setUserInfo: (state, action: PayloadAction<IUser>) => {
+      state.userInfo = action.payload
     }
-    default:
-      return state
   }
-}
+})
+
+export const { setUserInfo } = userSlice.actions;
+export default userSlice.reducer;

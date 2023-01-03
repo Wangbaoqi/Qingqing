@@ -1,6 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux'
+
+import { configureStore } from '@reduxjs/toolkit';
+
 import thunkMiddleware from 'redux-thunk'
-import rootReducer from '@/reducers/index'
+import reducer from '@/reducers/index'
 
 const composeEnhancers =
   typeof window === 'object' &&
@@ -19,7 +22,17 @@ const enhancer = composeEnhancers(
   // other store enhancers if any
 )
 
-export default function configStore() {
-  const store = createStore(rootReducer, enhancer)
-  return store
-}
+// export default function configStore() {
+//   const store = createStore(rootReducer, enhancer)
+//   return store
+// }
+
+export const store = configureStore({
+  reducer
+})
+
+
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+

@@ -3,6 +3,11 @@
 .index {
   padding: 26px;
   position: relative;
+
+  .van-ellipsis {
+    font-size: $font-size-sm;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -32,18 +37,16 @@
       padding: 0 20px;
     }
 
-    &-item {
-      margin-bottom: 12px;
-    }
     &-info {
       padding: 10px 0;
+      box-sizing: border-box;
+      height: 120px;
     }
     &-name {
       font-size: $font-size-md;
     }
     &-detail {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       font-size: $font-size-xs;
       margin-top: 10px;
@@ -56,36 +59,40 @@
 
   }
 
+  &__account {
+    border-radius: $border-radius-lg;
+    background: $white;
+  }
+
   &__task {
     border-radius: $border-radius-lg;
     background: $white;
 
-    &-title {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-bold;
-      padding: 20px;
-    }
-    &-content {
-      padding: 0 20px;
-    }
-
     &-name {
-      // margin: 20px 0;
+      display: inline-block;
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+      background-color: $green;
+      text-align: center;
+      line-height: 98px;
+      color: $white;
     }
     &-item {
-      height: 120px;
-    }
-    &-left {
-
+      // position: relative;
+      // height: 120px;
     }
     &-center {
       box-sizing: border-box;
-      left: 120px;
-      width: calc(100% - 120px - 120px);
-      height: 120px;
-      padding: 10px 0;
-    }
-    &-right {
+      left: 170px;
+      width: calc(100% - 220px);
+      height: 136px;
     }
   }
+
+}
+
+page {
+  --tag-font-size: 20px;
+  --ellipsis-font-size: 20px
 }

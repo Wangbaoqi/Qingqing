@@ -4,7 +4,7 @@ export interface IUser {
   // 头像地址
   avatarUrl?: string;
   // 生日
-  birthday?: Date;
+  birthday?: string;
   // 班级
   className?: string;
   // 性别

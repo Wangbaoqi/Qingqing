@@ -7,11 +7,12 @@ interface Options {
 
 function request(options:Taro.request.Option = {url: ''}) {
 
+  const Token = Taro.getStorageSync('token');
   options = {
     ...options,
     timeout: options.timeout || 10000,
     header: {
-      Authorization: `Bearer ${Taro.getStorageSync('token')}`
+      Authorization: `${Token ? `Bearer ${Token}` : ''}`
     },
     data: options.data || {},
     responseType: 'text',
