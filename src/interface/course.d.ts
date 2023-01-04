@@ -1,4 +1,10 @@
+
 export interface ICourse {
+  courseList: ICourseItem[];
+  status: string;
+}
+
+export interface ICourseItem {
   /**
    * 课程作者
    */

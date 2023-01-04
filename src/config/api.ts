@@ -7,4 +7,8 @@ export default {
   userWxLogin: `${apiRoot}/login`,
   bindStudent: `${apiRoot}/bindStudent`,
   getStudentList: `${apiRoot}/students`,
+  getStudentCourses: `${apiRoot}/courses`,
+  getStudentTasks: `${apiRoot}/missions`,
+  getStudentEvaluation: `${apiRoot}/student/evaluation`,
+  submitStudentEvaluation: `${apiRoot}/student/evaluate`,
 }

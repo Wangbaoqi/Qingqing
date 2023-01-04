@@ -14,24 +14,28 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/index'
 import { checkLogin, login } from '@/utils/request/user'
 import { wxGetStudent } from '@/service/auth'
-import { SET_USERINFO } from "@/constants/user";
 import { getCourseList, getTaskList } from '@/service/index';
 import { IUser } from "@/interface/user";
 import { ICourse } from "@/interface/course";
 import { getPeriodZh } from '@/utils/enum';
-import { setCourseInfo } from '@/actions/course'
+import { setCourseInfo } from '@/actions/course';
+
+import { getUserInfoAsync, selectUserInfo } from '@/reducers/userSlice';
+import { saveCourseListAsync, selectCourseList, selectCourseStatus } from '@/reducers/courseSlice';
 
 import './index.scss'
 
 export default function Index() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const store = useStore();
 
-  // const userInfo = useSelector((state) => state.user )
+  const userInfo = useAppSelector(selectUserInfo);
+  const courseList = useAppSelector(selectCourseList);
+  const courseLoading = useAppSelector(selectCourseStatus) === 'loading';
 
-  const [userInfo, setUserInfo] = useState<IUser | null>(null);
-  const [courseList, setCourseList] = useState<ICourse[] | []>([]);
-  const [courseLoading, setCourseLoading] = useState(true)
+  // const [userInfo, setUserInfo] = useState<IUser | null>(null);
+  // const [courseList, setCourseList] = useState<ICourse[] | []>([]);
+  // const [courseLoading, setCourseLoading] = useState(true)
 
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
@@ -39,47 +43,10 @@ export default function Index() {
     'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
   ]
 
-  const courses = [
-    {
-      title: '这是一门精品课程',
-      img: 'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '旺达浪',
-      category: '数学'
-    },
-    {
-      title: '这是一门数学课程',
-      img: 'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '钢铁侠',
-      category: '脑学'
-    },
-    {
-      title: '这是一门语文课程',
-      img: 'https://seopic.699pic.com/photo/50105/4228.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '美国队长',
-      category: '数学'
-    },
-    {
-      title: '这是一门英语课程',
-      img: 'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '鹰眼',
-      category: '数学'
-    },
-    {
-      title: '这是一门历史课程',
-      img: 'https://seopic.699pic.com/photo/50081/3827.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '蜘蛛侠',
-      category: '蜘学'
-    }
-  ]
-
-
   useEffect(() => {
-  }, [])
+    dispatch(getUserInfoAsync())
+    dispatch(saveCourseListAsync())
+  }, [dispatch])
 
   useReady(() => { })
 
@@ -92,7 +59,6 @@ export default function Index() {
 
   // 获取学生信息
   const checkUserStatus = async () => {
-    console.log('check');
     console.log(store.getState(), 'store');
     try {
       const isValid = await checkLogin();
@@ -102,24 +68,19 @@ export default function Index() {
         await login();
         await wxGetStudent();
       }
-      // const studentInfo: (IUser | null) = await wxGetStudent();
-      const cacheCurrentUser = Taro.getStorageSync('currentUser')
-      dispatch({ type: SET_USERINFO, payload: { userInfo: cacheCurrentUser } })
-      setUserInfo(cacheCurrentUser)
+      // const cacheCurrentUser = Taro.getStorageSync('currentUser')
 
-      fetchCourse()
-      console.log(store.getState(), 'store');
+
+      // fetchCourse()
     } catch (error) {
       console.log(error, 'ee');
     }
   }
 
-  const fetchCourse = () => {
-    getCourseList()
+  const fetchTask = () => {
+    getTaskList()
       .then((res) => {
-        console.log(res, 'course');
-        setCourseList(res);
-        setCourseLoading(false)
+        console.log(res, 'task');
       })
   }
 
@@ -135,7 +96,7 @@ export default function Index() {
     dispatch(setCourseInfo(course));
     Taro.setStorageSync('courseDetail', course)
     Taro.navigateTo({
-      url: '/pages/courseDetail/index'
+      url: `/pages/courseDetail/index?cid=${course.id}`
     })
   }, [dispatch])
 
@@ -160,6 +121,7 @@ export default function Index() {
           ))}
         </Swiper>
       </View>
+
 
       <View className='index__account mb-10 p-5 flex justify-between item-center'>
         {

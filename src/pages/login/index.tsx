@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
-import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
   Image,
@@ -31,12 +31,40 @@ export default function Login() {
 
 
   const addAccount = () => {
+
+    if (!studentCode) {
+      Taro.showToast({
+        mask: true,
+        icon: 'none',
+        title: '请输入学籍号'
+      })
+      return;
+    }
+
+    if (!studentName) {
+      Taro.showToast({
+        icon: 'none',
+        mask: true,
+        title: '请输入姓名'
+      })
+      return;
+    }
+
+    Taro.showLoading({
+      title: '正在添加...'
+    })
     wxBindStudent({
       studentCode,
       studentName
     }).then(res => {
+      Taro.hideLoading();
+      console.log(res,'ddd');
+
       console.log(res);
 
+    }).catch(err => {
+      console.log(err, 'bind student error');
+      Taro.hideLoading();
     })
   }
 
@@ -58,6 +86,7 @@ export default function Login() {
               onChange={(e) => setStudentCode(e.detail)}
             />
             <Field
+              clearable
               value={studentName}
               label='姓名'
               placeholder='请输入姓名'
