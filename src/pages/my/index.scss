@@ -27,4 +27,17 @@ page {
     background: $white;
     overflow: hidden;
   }
+  &__info {
+
+    &-name {
+      display: inline-block;
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+      background-color: $green;
+      text-align: center;
+      line-height: 98px;
+      color: $white;
+    }
+  }
 }

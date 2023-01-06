@@ -14,6 +14,16 @@
     position: relative;
     border: 2px solid $gray-5;
     border-radius: $border-radius-md;
+    &-name {
+      display: inline-block;
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+      background-color: $green;
+      text-align: center;
+      line-height: 98px;
+      color: $white;
+    }
   }
   &__check {
     border: 2px solid $green;

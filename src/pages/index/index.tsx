@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useStore } from 'react-redux'
 import {
   Image,
   Tag,
@@ -14,11 +14,8 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/index'
 import { checkLogin, login } from '@/utils/request/user'
 import { wxGetStudent } from '@/service/auth'
-import { getCourseList, getTaskList } from '@/service/index';
-import { IUser } from "@/interface/user";
-import { ICourse } from "@/interface/course";
+import { getCourseList, getTaskList, validToken } from '@/service/index';
 import { getPeriodZh } from '@/utils/enum';
-import { setCourseInfo } from '@/actions/course';
 
 import { getUserInfoAsync, selectUserInfo } from '@/reducers/userSlice';
 import { saveCourseListAsync, selectCourseList, selectCourseStatus } from '@/reducers/courseSlice';
@@ -33,9 +30,6 @@ export default function Index() {
   const courseList = useAppSelector(selectCourseList);
   const courseLoading = useAppSelector(selectCourseStatus) === 'loading';
 
-  // const [userInfo, setUserInfo] = useState<IUser | null>(null);
-  // const [courseList, setCourseList] = useState<ICourse[] | []>([]);
-  // const [courseLoading, setCourseLoading] = useState(true)
 
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
@@ -44,32 +38,27 @@ export default function Index() {
   ]
 
   useEffect(() => {
-    dispatch(getUserInfoAsync())
-    dispatch(saveCourseListAsync())
-  }, [dispatch])
+    checkUserStatus();
+
+  }, [])
 
   useReady(() => { })
 
   useDidShow(() => {
-    checkUserStatus();
 
   })
 
   useDidHide(() => { })
 
-  // 获取学生信息
-  const checkUserStatus = async () => {
-    console.log(store.getState(), 'store');
-    try {
-      const isValid = await checkLogin();
-      console.log(isValid, 'isValid');
-      // await login();
-      if (!isValid) {
-        await login();
-        await wxGetStudent();
-      }
-      // const cacheCurrentUser = Taro.getStorageSync('currentUser')
 
+  const checkUserStatus = async () => {
+    try {
+
+      dispatch(getUserInfoAsync())
+      dispatch(saveCourseListAsync())
+
+      const cacheCurrentUser = Taro.getStorageSync('currentUser')
+      // fetchTask(cacheCurrentUser)
 
       // fetchCourse()
     } catch (error) {
@@ -77,10 +66,20 @@ export default function Index() {
     }
   }
 
-  const fetchTask = () => {
-    getTaskList()
+  const fetchTest = () => {
+    validToken()
+      .then(res => {
+
+    })
+  }
+
+  const fetchTask = (cacheCurrentUser) => {
+
+    getTaskList({
+      studentId: cacheCurrentUser.id,
+    })
       .then((res) => {
-        console.log(res, 'task');
+        // console.log(res, 'task');
       })
   }
 
@@ -93,7 +92,6 @@ export default function Index() {
   }
 
   const onNavigateCourseDetail = useCallback((course) => {
-    dispatch(setCourseInfo(course));
     Taro.setStorageSync('courseDetail', course)
     Taro.navigateTo({
       url: `/pages/courseDetail/index?cid=${course.id}`

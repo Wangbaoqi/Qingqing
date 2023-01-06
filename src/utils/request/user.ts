@@ -74,13 +74,9 @@ export const login = (): Promise<boolean> => {
 
 
 export const checkLogin = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (Taro.getStorageSync('openId') && Taro.getStorageSync('token')) {
-      checkSession().then(() => {
-        resolve(true);
-      }).catch(() => {
-        reject(false);
-      });
+      resolve(true);
     } else {
       resolve(false);
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
@@ -7,27 +7,21 @@ import {
   Row, Col,
   Cell,
 } from '@antmjs/vantui'
+
+import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { selectUserInfo } from '@/reducers/userSlice';
+
 import './index.scss'
 
 export default function My() {
-  const myInfo = {
-    avatarId: 1,
-    avatarUrl: '',
-    birthday: '2012-09-10',
-    className: '三年级5班',
-    gender: '',
-    id: 348204920,
-    parentPhoneNum: '15732123333',
-    studentCode: '43u24u4392',
-    studentName: '张大力'
-  }
-  const infoList = [
-    myInfo,
-    myInfo
+  const dispatch = useAppDispatch()
+  const userInfo = useAppSelector(selectUserInfo)
+
+  const images = [
+    'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
+    'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',
+    'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
   ]
-
-  const [showAccount, setShowAccount] = useState(false);
-
 
   useEffect(() => {
 
@@ -84,15 +78,26 @@ export default function My() {
 
   return (
     <View className='my'>
-
       <View className='my__card p-5 mb-5'>
-        <View className='my__info flex item-center gap-6'>
-          <Image round width='50px' height='50px' src='https://img.yzcdn.cn/vant/cat.jpeg' />
-          <View className='flex flex-column gap-2'>
-            <Text className='text-3xl font-medium'>张大力</Text>
-            <Text className='text-sm'>43728497</Text>
-          </View>
-        </View>
+        {
+          userInfo ?
+              <View className='my__info flex item-center gap-6'>
+                <Text className='my__info-name text-5xl font-medium'>{userInfo.studentName && userInfo.studentName[userInfo.studentName.length-2]}</Text>
+                <View className='flex flex-column gap-2'>
+                  <Text className='text-3xl font-medium'>{ userInfo.studentName}</Text>
+                  <Text className='text-sm'>{userInfo.id}</Text>
+                </View>
+              </View> :
+            (
+              <View className='flex item-center gap-6' onClick={onNavigateToAccountList}>
+                <Image src={images[0]} round fit='cover' width='50px' height='50px' />
+                <View className='flex flex-column gap-1'>
+                  <Text className='text-xl font-medium'>您还没有添加账号</Text>
+                  <Text className='text-sm text-green'>去添加账号</Text>
+                </View>
+              </View>
+            )
+        }
       </View>
 
       <View className='my__card p-5 mb-5'>
@@ -129,7 +134,6 @@ export default function My() {
         <Cell title='个人信息' isLink icon='label-o' onClick={onNavigateToPersonInfo} />
         <Cell title='关于我们' isLink icon='contact' onClick={onNavigateToAboutMe} />
       </View>
-
     </View>
   )
 }

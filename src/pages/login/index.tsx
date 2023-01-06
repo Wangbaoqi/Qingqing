@@ -54,12 +54,13 @@ export default function Login() {
       title: '正在添加...'
     })
     wxBindStudent({
-      studentCode,
-      studentName
+      studentCode: studentCode.trim(),
+      studentName: studentName.trim()
     }).then(res => {
       Taro.hideLoading();
       console.log(res,'ddd');
 
+      Taro.navigateBack();
       console.log(res);
 
     }).catch(err => {

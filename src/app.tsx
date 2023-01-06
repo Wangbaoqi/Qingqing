@@ -9,7 +9,9 @@ import './app.scss'
 function App(props) {
   useEffect(() => {
     try {
-      initUserInfo();
+      console.log('app effect')
+
+      // initUserInfo();
     } catch (error) {
 
     }
@@ -18,12 +20,11 @@ function App(props) {
   }, [])
 
   useDidShow(() => {
-    console.log('did show')
-    try {
-      initUserInfo();
-    } catch (error) {
+    // try {
+    //   initUserInfo();
+    // } catch (error) {
 
-    }
+    // }
   })
 
   useDidHide(() => {
@@ -31,7 +32,10 @@ function App(props) {
   })
 
   const initUserInfo = async () => {
-    await login();
+    const isLogin = await checkLogin();
+    if (!isLogin) {
+      await login();
+    }
     await wxGetStudent();
   }
 

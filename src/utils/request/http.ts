@@ -1,53 +1,96 @@
-import Taro from "@tarojs/taro"
+import Taro from "@tarojs/taro";
+import Api from "@/config/api";
+
+import { login } from "./user";
 
 interface Options {
-  url: string,
-  data?: object
+  url: string;
+  data?: object;
 }
 
-function request(options:Taro.request.Option = {url: ''}) {
+let isRefreshToken = false;
+let subscribers: Function[] = [];
 
-  const Token = Taro.getStorageSync('token');
+function interceptor(chain: Taro.Chain) {
+  const requestParams = chain.requestParams;
+  // const { method, data, url } = requestParams;
+  return chain
+    .proceed(requestParams)
+    .then(res => {
+      return checkStatus(res, requestParams)
+    })
+    .catch(err => err)
+}
+
+Taro.addInterceptor(interceptor);
+
+function request(options: Taro.request.Option = { url: "" }) {
+  const Token = Taro.getStorageSync("token");
   options = {
     ...options,
     timeout: options.timeout || 10000,
     header: {
-      Authorization: `${Token ? `Bearer ${Token}` : ''}`
+      Authorization: `${Token ? `Bearer ${Token}` : ""}`
     },
     data: options.data || {},
-    responseType: 'text',
-    dataType: 'json',
-    method: options.method || 'GET'
-  }
+    responseType: "text",
+    dataType: "json",
+    method: options.method || "GET"
+  };
 
-  return new Promise((resolve, reject) => {
-
-    Taro.request({
-      ...options
-    })
-      .then(res => {
-        if (res.statusCode === 200) {
-          if (res.data.success && res.data.data) {
-            resolve(res.data.data)
-          } else {
-            reject(res.data.errMessage)
-          }
-        } else {
-          reject(res.errMsg)
-        }
-      })
-      .catch(err => {
-        reject(err)
-      })
+  return Taro.request({
+    ...options
   })
 }
 
-request.get = (url, data?: object) => {
-  return request({url, data, method: 'GET'})
+function checkStatus(response, requestParams) {
+  const { data = {}, statusCode = 200, errMsg = "" } = response;
+
+  console.log("checkStatus", data, requestParams.url);
+
+  if (statusCode === 200) {
+    // token lose effectiveness
+    if (data.errCode === "401") {
+      if (!isRefreshToken) {
+        isRefreshToken = true;
+        return login().then(() => {
+          executeSubscribers();
+          isRefreshToken = true;
+          return request(requestParams)
+        });
+      }
+      return new Promise(resolve => {
+        addSubscriber(() => {
+          resolve(request(requestParams));
+        });
+      });
+    } else if (!data.data) {
+      return Promise.reject(data.errMessage)
+    } else {
+      return data.data;
+    }
+  } else {
+    return errMsg;
+  }
 }
 
-request.post = (url, data?: object) => {
-  return request({url, data, method: 'POST'})
+function executeSubscribers() {
+  subscribers.forEach(subscriber => {
+    subscriber();
+  });
+  subscribers = [];
 }
 
-export default request
+function addSubscriber(cb) {
+  subscribers.push(cb);
+}
+
+request.get = (url: string, data?: object) => {
+  return request({ url, data, method: "GET" });
+};
+
+request.post = (url: string, data?: object) => {
+  return request({ url, data, method: "POST" });
+};
+
+export default request;

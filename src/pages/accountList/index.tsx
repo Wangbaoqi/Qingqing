@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
@@ -7,36 +7,19 @@ import {
   Tag,
   SwipeCell,
   Icon,
-} from '@antmjs/vantui'
-import './index.scss'
+} from '@antmjs/vantui';
+
+import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { selectUserInfo, setUserInfo, getUserInfoAsync, selectUserList } from '@/reducers/userSlice';
+import { wxUnBindStudent } from '@/service/auth';
+
+import './index.scss';
 
 export default function AccountList() {
 
-  const myInfo = {
-    avatarId: 1,
-    avatarUrl: '',
-    birthday: '2012-09-10',
-    className: '三年级5班',
-    gender: '',
-    id: 348204920,
-    parentPhoneNum: '15732123333',
-    studentCode: '43u24u4392',
-    studentName: '张大力'
-  }
-  const infoList = [
-    myInfo,
-    {
-      avatarId: 1,
-      avatarUrl: '',
-      birthday: '2012-09-10',
-      className: '三年级5班',
-      gender: '',
-      id: 348204920,
-      parentPhoneNum: '15732123333',
-      studentCode: '43u24u9989',
-      studentName: '网三大'
-    }
-  ]
+  const dispatch = useAppDispatch();
+  const userInfo = useAppSelector(selectUserInfo)
+  const userList = useAppSelector(selectUserList) || Taro.getStorageSync('userList')
 
 
   useEffect(() => {
@@ -55,36 +38,62 @@ export default function AccountList() {
     })
   }
 
+  const onCheckAccount = useCallback((user) => {
+    dispatch(setUserInfo(user));
+    Taro.switchTab({
+      url: '/pages/index/index'
+    })
+  }, [dispatch])
+
+  const onUnbindAccount = useCallback(({studentCode}) => {
+    Taro.showLoading({
+      title: '正在删除...'
+    })
+
+    wxUnBindStudent({ studentCode })
+      .then(res => {
+        Taro.hideLoading();
+        dispatch(getUserInfoAsync)
+        console.log(res, 'delete student successfully');
+      })
+      .catch(err => {
+        console.log(err)
+      })
+     .finally(() => {
+        Taro.hideLoading();
+      })
+
+  }, [dispatch])
+
   return (
     <View className='account'>
-
       <View className='account__card p-8'>
         <View className='text-4xl font-medium mb-2'>选择账号登录</View>
         <View className='text-base'>点击想要登录的账号</View>
         <View className='mt-10'>
           {
-            infoList.map((info, idx) => (
+            userInfo && userList.map((info, idx) => (
               <SwipeCell
                 rightWidth={65}
                 leftWidth={0}
-                renderLeft={<Button>选择</Button>}
-                renderRight={<Button className='ml-2' type='danger'>删除</Button>}
+                renderRight={<Button className='ml-2' type='danger' onClick={() => onUnbindAccount(info)}>删除</Button>}
                 key={`info#${idx}`}
+                // onClick={() => onCheckAccount(info)}
               >
-                <View className={`account__item flex item-center gap-6 p-4  mb-4 ${info.studentCode === myInfo.studentCode ? 'account__check' : ''}`} >
-                  <Image round width='50px' height='50px' src='https://img.yzcdn.cn/vant/cat.jpeg' />
+                <View onClick={() => onCheckAccount(info)} className={`account__item flex item-center gap-6 p-4  mb-4 ${info.studentCode === userInfo.studentCode ? 'account__check' : ''}`} >
+                  <Text className='account__item-name text-5xl font-medium'>{info.studentName && info.studentName[info.studentName.length-2]}</Text>
                   <View className=' flex flex-column gap-2'>
                     <View className='text-xl font-medium flex item-center gap-3'>
                       <Text>{info.studentName}</Text>
                       {
-                        info.studentCode === myInfo.studentCode ?
+                        info.studentCode === userInfo.studentCode ?
                           <Tag plain color='#39b54a'>当前</Tag> : ''
                       }
                     </View>
                     <Text className='text-sm'>{info.studentCode}</Text>
                   </View>
                   {
-                    info.studentCode === myInfo.studentCode ?
+                    info.studentCode === userInfo.studentCode ?
                     <Icon className='account__icon' name='success' size='24px' color='#39b54a' /> : ''
                   }
                 </View>

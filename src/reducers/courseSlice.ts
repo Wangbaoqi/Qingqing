@@ -33,8 +33,6 @@ export const saveCourseListAsync = () => async (dispatch) => {
   try {
     dispatch(saveCourseLoading());
     const courseList = await getCourseList()
-    console.log(courseList, 'courseList');
-
     dispatch(saveCourseList(courseList))
   } catch (error) {
     console.log(error, 'Save Course List error');
