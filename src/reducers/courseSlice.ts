@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICourse } from "@/interface/course";
-import { getCourseList } from '@/service/index';
+import { getCourseList, getCourseDetail } from '@/service/index';
 
 const initialState: ICourse = {
   status: 'idle',
-  courseList: []
+  courseList: [],
+  courseDetail: {}
 }
 
 export const courseSlice = createSlice({
@@ -18,6 +19,10 @@ export const courseSlice = createSlice({
         ...action.payload
       ]
     },
+    saveCourseDetail: (state, action) => {
+      state.status = 'idle';
+      state.courseDetail = action.payload
+    },
     saveCourseLoading: (state) => {
       state.status = 'loading'
     }
@@ -26,6 +31,7 @@ export const courseSlice = createSlice({
 
 export const {
   saveCourseList,
+  saveCourseDetail,
   saveCourseLoading
 } = courseSlice.actions;
 
@@ -39,11 +45,20 @@ export const saveCourseListAsync = () => async (dispatch) => {
   }
 }
 
+export const saveCourseDetailAsync = (courseId: string) => async (dispatch) => {
+  try {
+    dispatch(saveCourseLoading());
+    const courseDetail = await getCourseDetail(courseId)
+    dispatch(saveCourseDetail(courseDetail))
+  } catch (error) {
+    console.log(error, 'Save Course List error');
+  }
+}
+
 export const selectCourseList = (state) => state.course.courseList;
+export const selectCourseDetail = (state) => state.course.courseDetail;
 export const selectCourseStatus = (state) => state.course.status;
 
-export const selectCourseById = (state, cid) => {
-  return selectCourseList(state).filter(course => cid === course.id)[0]
-}
+
 
 export default courseSlice.reducer;

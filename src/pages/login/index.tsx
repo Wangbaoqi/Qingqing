@@ -9,12 +9,15 @@ import {
 } from '@antmjs/vantui'
 
 import { wxBindStudent } from '@/service/auth'
+import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { selectUserInfo, setUserInfo, getUserInfoAsync, selectUserList } from '@/reducers/userSlice';
 
 import './index.scss'
 import logo from '../../images/logo.jpg'
 
 export default function Login() {
 
+  const dispatch = useAppDispatch()
   const [studentName, setStudentName] = useState('')
   const [studentCode, setStudentCode] = useState('')
 
@@ -59,6 +62,7 @@ export default function Login() {
     }).then(res => {
       Taro.hideLoading();
       console.log(res,'ddd');
+      dispatch(getUserInfoAsync())
 
       Taro.navigateBack();
       console.log(res);

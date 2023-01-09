@@ -1,6 +1,7 @@
 export interface IUser {
   userInfo: IUserInfo | null,
-  userList: IUserInfo[] | []
+  userList: IUserInfo[] | [],
+  status: string
 }
 export interface IUserInfo {
   // 头像id
@@ -25,4 +26,10 @@ export interface IUserInfo {
   studentCode?: string;
   // 姓名
   studentName?: string;
+}
+
+export interface ILogin {
+  expiredTime?: string,
+  openId?: string,
+  token?: string
 }

@@ -25,12 +25,13 @@ export const { setWillTaskList, setDoneTaskList } = taskSlice.actions;
 
 export const getTaskListAsync = (missionStatus = '') => (dispatch, getState) => {
   const { userInfo = {} } = getState().user;
-  const { classId = '', currentGrade: grade = 0, currentSemester:semester = '', id = ''} = userInfo;
+
+  const { classId = '', currentGrade: grade = 0, currentSemester:semester = '', id: studentId = ''} = userInfo??{};
   const params = {
     classId,
     grade,
     semester,
-    id,
+    studentId,
     missionStatus
   }
   getTaskList(params)

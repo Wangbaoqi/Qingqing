@@ -45,18 +45,18 @@ export default function AccountList() {
     })
   }, [dispatch])
 
-  const onUnbindAccount = useCallback(({studentCode}) => {
+  const onUnbindAccount = useCallback(({id}) => {
     Taro.showLoading({
       title: '正在删除...'
     })
-
-    wxUnBindStudent({ studentCode })
+    wxUnBindStudent({ studentId: id })
       .then(res => {
         Taro.hideLoading();
-        dispatch(getUserInfoAsync)
+        dispatch(getUserInfoAsync())
         console.log(res, 'delete student successfully');
       })
       .catch(err => {
+        Taro.hideLoading();
         console.log(err)
       })
      .finally(() => {

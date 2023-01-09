@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
-import { useStore } from 'react-redux'
 import {
   Image,
   Tag,
@@ -12,24 +11,21 @@ import {
   Loading
 } from '@antmjs/vantui'
 import { useAppDispatch, useAppSelector } from '@/hooks/index'
-import { checkLogin, login } from '@/utils/request/user'
-import { wxGetStudent } from '@/service/auth'
-import { getCourseList, getTaskList, validToken } from '@/service/index';
 import { getPeriodZh } from '@/utils/enum';
-
-import { getUserInfoAsync, selectUserInfo } from '@/reducers/userSlice';
+import { getUserInfoAsync, selectUserInfo, selectUserStatus } from '@/reducers/userSlice';
 import { saveCourseListAsync, selectCourseList, selectCourseStatus } from '@/reducers/courseSlice';
+import { selectWillTaskList, getTaskListAsync } from '@/reducers/taskSlice';
 
+import defaultImg from '@/images/default.jpg';
 import './index.scss'
 
 export default function Index() {
   const dispatch = useAppDispatch();
-  const store = useStore();
-
   const userInfo = useAppSelector(selectUserInfo);
+  const willTaskList = useAppSelector(selectWillTaskList);
   const courseList = useAppSelector(selectCourseList);
   const courseLoading = useAppSelector(selectCourseStatus) === 'loading';
-
+  const userLoading = useAppSelector(selectUserStatus) === 'loading'
 
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
@@ -38,56 +34,31 @@ export default function Index() {
   ]
 
   useEffect(() => {
-    checkUserStatus();
+    dispatch(getUserInfoAsync())
+    dispatch(saveCourseListAsync())
+  }, [dispatch])
 
-  }, [])
+  useEffect(() => {
+    dispatch(getTaskListAsync('TO_BE_COMPLETED'))
+  }, [userInfo, dispatch])
 
   useReady(() => { })
 
-  useDidShow(() => {
-
-  })
+  useDidShow(() => {})
 
   useDidHide(() => { })
-
-
-  const checkUserStatus = async () => {
-    try {
-
-      dispatch(getUserInfoAsync())
-      dispatch(saveCourseListAsync())
-
-      const cacheCurrentUser = Taro.getStorageSync('currentUser')
-      // fetchTask(cacheCurrentUser)
-
-      // fetchCourse()
-    } catch (error) {
-      console.log(error, 'ee');
-    }
-  }
-
-  const fetchTest = () => {
-    validToken()
-      .then(res => {
-
-    })
-  }
-
-  const fetchTask = (cacheCurrentUser) => {
-
-    getTaskList({
-      studentId: cacheCurrentUser.id,
-    })
-      .then((res) => {
-        // console.log(res, 'task');
-      })
-  }
 
   const onChange = (e) => { }
 
   const navigateToTaskDetail = () => {
     Taro.navigateTo({
-      url: '/pages/taskDetail/index'
+      url: `/pages/taskDetail/index?sid=${userInfo.id}`
+    })
+  }
+
+  const onNavigateToAccount = () => {
+    Taro.navigateTo({
+      url: `/pages/accountList/index`
     })
   }
 
@@ -96,12 +67,18 @@ export default function Index() {
     Taro.navigateTo({
       url: `/pages/courseDetail/index?cid=${course.id}`
     })
-  }, [dispatch])
+  }, [])
+
+  const onPreviewImg = (url) => {
+    Taro.previewImage({
+      current: url,
+      urls: images
+    })
+  }
 
 
   return (
     <View className='index'>
-
       <View className='index__swiper' >
         <Swiper
           height={180}
@@ -114,35 +91,39 @@ export default function Index() {
         >
           {images.map((item, index) => (
             <SwiperItem key={`swiper#demo1${index}`}>
-              <Image src={item} fit='cover' width='100%' height='180px' />
+
+              <Image src={item} fit='cover' width='100%' height='180px' onClick={() => onPreviewImg(item)} />
             </SwiperItem>
           ))}
         </Swiper>
       </View>
 
-
-      <View className='index__account mb-10 p-5 flex justify-between item-center'>
-        {
-          userInfo ?
-            <View className='flex item-center gap-6 text-base'>
-              <Text className='index__task-name text-5xl font-medium'>{userInfo.studentName && userInfo.studentName[userInfo.studentName.length-2]}</Text>
-              <View className='flex flex-column justify-between' style={{height: '44px'}}>
-                <Text className='text-xl font-medium'>{userInfo.studentName}</Text>
-                <View className='text-sm flex item-center gap-4'>
-                  <Text>{userInfo.id}</Text>
-                  <Text>{userInfo.className}</Text>
+      <View className='index__account mb-10 p-5 '>
+        <Skeleton avatar title row={1} loading={userLoading} avatarSize='48px'>
+          <View className='flex justify-between item-center' onClick={onNavigateToAccount}>
+            {
+              userInfo ?
+                <View className='flex item-center gap-6 text-base' >
+                  <Text className='index__task-name text-5xl font-medium'>{userInfo.studentName && userInfo.studentName[userInfo.studentName.length-1]}</Text>
+                  <View className='flex flex-column justify-between' style={{height: '44px'}}>
+                    <Text className='text-xl font-medium'>{userInfo.studentName}</Text>
+                    <View className='text-sm flex item-center gap-4'>
+                      <Text>{userInfo.id}</Text>
+                      <Text>{userInfo.className}</Text>
+                    </View>
+                  </View>
+                </View> :
+                <View className='index__account-left flex item-center gap-6'>
+                  <Image src={images[0]} round fit='cover' width='50px' height='50px' />
+                  <View className='flex flex-column gap-1'>
+                    <Text className='text-xl font-medium'>您还没有添加账号</Text>
+                    <Text className='text-sm text-green'>去添加账号</Text>
+                  </View>
                 </View>
-              </View>
-            </View> :
-            <View className='index__account-left flex item-center gap-6'>
-              <Image src={images[0]} round fit='cover' width='50px' height='50px' />
-              <View className='flex flex-column gap-1'>
-                <Text className='text-xl font-medium'>您还没有添加账号</Text>
-                <Text className='text-sm text-green'>去添加账号</Text>
-              </View>
-            </View>
-        }
-        <Icon name='arrow' size='20px' />
+            }
+            <Icon name='arrow' size='20px' />
+          </View>
+        </Skeleton>
       </View>
 
       <View className='index__task mb-10'>
@@ -154,7 +135,7 @@ export default function Index() {
             <View className='index__task-item pl-5 pr-5 flex gap-5 relative' onClick={() => navigateToTaskDetail()}>
               <Image src={images[0]} radius='8' fit='cover' width='68px' height='68px' />
               <View className='index__task-center absolute flex flex-column justify-between flex-1'>
-                <View className='index__task-title text-lg truncate'>
+                <View className='index__task-title text-lg truncate font-medium'>
                   任务名称大方任
                 </View>
                 <View className='flex gap-3'>
@@ -172,18 +153,24 @@ export default function Index() {
 
       <View className='index__course'>
         <View className='index__course-title'>
-          <Text>我的课程</Text>
+          <Text>精品课程</Text>
         </View>
-        <Skeleton row={3} loading={courseLoading}  style={{ padding: '10px'}}>
+        <Skeleton row={4} loading={courseLoading} style={{ padding: '10px'}}>
           <View className='index__course-content'>
             <Row gutter='20'>
               {
                 courseList.map((course, idx) => (
                   <Col span='12' key={`course${idx}`}>
                     <View className='index__course-item' onClick={() => onNavigateCourseDetail(course)}>
-                      <Image round radius='8' renderLoading={<Loading type='spinner' size='20' vertical></Loading>} src={course.backgroundImageFileUrl} fit='cover' width='100%' height='160px' />
+                      <Image round radius='8'
+                        renderLoading={<Loading type='spinner' size='20' vertical></Loading>}
+                        src={course.backgroundImageFileUrl}
+                        fit='cover' width='100%' height='160px'
+                        showError
+                        renderError={<Image round radius='8' fit='cover' width='100%' height='160px' src={defaultImg} />}
+                      />
                       <View className='index__course-info'>
-                        <View className='index__course-name truncate'>{course.name}</View>
+                        <View className='index__course-name truncate font-medium'>{course.name}</View>
                         <View className='index__course-detail gap-4'>
                           <Tag plain color='#39b54a' >{course.duration || '0'}课时</Tag>
                           <Tag plain color='#1989fa' >{getPeriodZh(course.period)}</Tag>

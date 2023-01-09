@@ -12,6 +12,7 @@ export default {
   unBindStudent: `${miniApp}/unbindStudent`,
   getStudentList: `${miniApp}/students`,
   getStudentCourses: `${miniApp}/courses`,
+  getStudentCourseDetail: `${miniApp}/course`,
   getStudentTasks: `${miniApp}/missions`,
   getStudentEvaluation: `${miniApp}/student/evaluation`,
   submitStudentEvaluation: `${miniApp}/student/evaluate`,

@@ -1,12 +1,7 @@
 import Taro from "@tarojs/taro";
-import Api from "@/config/api";
+import { IResponse } from '@/interface/response';
+import { login } from "../../service/user";
 
-import { login } from "./user";
-
-interface Options {
-  url: string;
-  data?: object;
-}
 
 let isRefreshToken = false;
 let subscribers: Function[] = [];
@@ -19,12 +14,14 @@ function interceptor(chain: Taro.Chain) {
     .then(res => {
       return checkStatus(res, requestParams)
     })
-    .catch(err => err)
+    .catch(err => {
+      console.log(err, 'interceptor error');
+    })
 }
 
 Taro.addInterceptor(interceptor);
 
-function request(options: Taro.request.Option = { url: "" }) {
+function request(options: Taro.request.Option = { url: "" }): Promise<IResponse> {
   const Token = Taro.getStorageSync("token");
   options = {
     ...options,
@@ -46,11 +43,9 @@ function request(options: Taro.request.Option = { url: "" }) {
 function checkStatus(response, requestParams) {
   const { data = {}, statusCode = 200, errMsg = "" } = response;
 
-  console.log("checkStatus", data, requestParams.url);
-
   if (statusCode === 200) {
     // token lose effectiveness
-    if (data.errCode === "401") {
+    if (data.errCode === "401" || data.errCode === "403") {
       if (!isRefreshToken) {
         isRefreshToken = true;
         return login().then(() => {
@@ -64,10 +59,8 @@ function checkStatus(response, requestParams) {
           resolve(request(requestParams));
         });
       });
-    } else if (!data.data) {
-      return Promise.reject(data.errMessage)
     } else {
-      return data.data;
+      return data;
     }
   } else {
     return errMsg;

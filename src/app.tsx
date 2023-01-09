@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDidHide, useDidShow } from '@tarojs/taro'
 import { Provider } from 'react-redux'
 import { store } from '@/store/index'
-import { checkLogin, login } from '@/utils/request/user'
+import { checkLogin, login } from '@/service/user'
 import { wxGetStudent } from '@/service/auth'
 import './app.scss'
 
@@ -30,14 +30,6 @@ function App(props) {
   useDidHide(() => {
     console.log('did hide')
   })
-
-  const initUserInfo = async () => {
-    const isLogin = await checkLogin();
-    if (!isLogin) {
-      await login();
-    }
-    await wxGetStudent();
-  }
 
   return (
     <Provider store={store}>

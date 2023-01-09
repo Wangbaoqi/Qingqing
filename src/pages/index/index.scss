@@ -8,6 +8,7 @@
     font-size: $font-size-sm;
   }
 
+
   &::before {
     content: '';
     position: absolute;
@@ -58,16 +59,18 @@
     }
 
   }
-
   &__account {
     border-radius: $border-radius-lg;
     background: $white;
-  }
 
+    .van-skeleton__row {
+      margin-top: 10px;
+      width: 50% !important;
+    }
+  }
   &__task {
     border-radius: $border-radius-lg;
     background: $white;
-
     &-name {
       display: inline-block;
       width: 98px;
@@ -77,10 +80,6 @@
       text-align: center;
       line-height: 98px;
       color: $white;
-    }
-    &-item {
-      // position: relative;
-      // height: 120px;
     }
     &-center {
       box-sizing: border-box;
@@ -94,5 +93,7 @@
 
 page {
   --tag-font-size: 20px;
-  --ellipsis-font-size: 20px
+  --ellipsis-font-size: 20px;
+  --skeleton-padding: 0px;
+  --skeleton-row-height: 32px;
 }
