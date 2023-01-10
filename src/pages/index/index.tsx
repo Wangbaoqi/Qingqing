@@ -11,10 +11,10 @@ import {
   Loading
 } from '@antmjs/vantui'
 import { useAppDispatch, useAppSelector } from '@/hooks/index'
-import { getPeriodZh } from '@/utils/enum';
+import { getPeriodZh, getClassZh, getSceneZh } from '@/utils/enum';
 import { getUserInfoAsync, selectUserInfo, selectUserStatus } from '@/reducers/userSlice';
 import { saveCourseListAsync, selectCourseList, selectCourseStatus } from '@/reducers/courseSlice';
-import { selectWillTaskList, getTaskListAsync } from '@/reducers/taskSlice';
+import { selectWillTaskList, getTaskListAsync, selectTaskStatus } from '@/reducers/taskSlice';
 
 import defaultImg from '@/images/default.jpg';
 import './index.scss'
@@ -26,6 +26,7 @@ export default function Index() {
   const courseList = useAppSelector(selectCourseList);
   const courseLoading = useAppSelector(selectCourseStatus) === 'loading';
   const userLoading = useAppSelector(selectUserStatus) === 'loading'
+  const taskLoading = useAppSelector(selectTaskStatus) === 'loading'
 
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
@@ -39,7 +40,7 @@ export default function Index() {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getTaskListAsync('TO_BE_COMPLETED'))
+    userInfo && dispatch(getTaskListAsync('TO_BE_COMPLETED'))
   }, [userInfo, dispatch])
 
   useReady(() => { })
@@ -50,9 +51,9 @@ export default function Index() {
 
   const onChange = (e) => { }
 
-  const navigateToTaskDetail = () => {
+  const navigateToTaskDetail = ({id, studentMissionId}) => {
     Taro.navigateTo({
-      url: `/pages/taskDetail/index?sid=${userInfo.id}`
+      url: `/pages/taskDetail/index?tid=${id}&sid=${studentMissionId}`
     })
   }
 
@@ -91,7 +92,6 @@ export default function Index() {
         >
           {images.map((item, index) => (
             <SwiperItem key={`swiper#demo1${index}`}>
-
               <Image src={item} fit='cover' width='100%' height='180px' onClick={() => onPreviewImg(item)} />
             </SwiperItem>
           ))}
@@ -126,31 +126,51 @@ export default function Index() {
         </Skeleton>
       </View>
 
+      {/* 任务 */}
       <View className='index__task mb-10'>
-        <View className='text-xl font-medium p-5'>
-          <Text>待处理任务</Text>
-        </View>
-        <View className='pb-5 mb-3'>
-          <View className='index__task-box'>
-            <View className='index__task-item pl-5 pr-5 flex gap-5 relative' onClick={() => navigateToTaskDetail()}>
-              <Image src={images[0]} radius='8' fit='cover' width='68px' height='68px' />
-              <View className='index__task-center absolute flex flex-column justify-between flex-1'>
-                <View className='index__task-title text-lg truncate font-medium'>
-                  任务名称大方任
+        <Skeleton title avatar row={2} avatarShape='square' avatarSize='68px' loading={taskLoading} style={{ padding: '42px 10px 10px' }}>
+          {
+            willTaskList.length ? (
+              <>
+                <View className='text-xl font-medium p-5'>
+                  <Text>待处理任务</Text>
                 </View>
-                <View className='flex gap-3'>
-                  <Tag plain type='primary'>标签</Tag>
-                  <Tag plain type='primary'>标签</Tag>
-                  <Tag plain type='primary'>标签</Tag>
-                  <Tag plain type='primary'>标签</Tag>
+                <View className='pb-5 mb-3'>
+                  <View className='index__task-box'>
+                    {
+                      willTaskList.map((task, idx) => (
+                        <View key={`task#${idx}`} className='index__task-item pl-5 pr-5 flex gap-5 relative' onClick={() => navigateToTaskDetail(task)}>
+                          <Image
+                            src={task.backgroundImageFileUrl || defaultImg}
+                            radius='8' fit='cover' width='68px' height='68px'
+                            showError
+                            renderError={<Image round radius='8' fit='cover' width='68px' height='68px' src={defaultImg} />}
+                          />
+                          <View className='index__task-center absolute flex flex-column justify-between flex-1'>
+                            <View className='index__task-title text-lg truncate font-medium'>
+                              {task.name}
+                            </View>
+                            <View className='flex gap-3'>
+                              <Tag plain color='#39b54a' >{task.duration || '0'}课时</Tag>
+                              <Tag plain color='#1989fa' >{getPeriodZh(task.period)}</Tag>
+                              <Tag plain color='#ed6a0c' >{getClassZh(task.classification)}</Tag>
+                              <Tag plain color='#ff976a' >{getSceneZh(task.scene)}</Tag>
+                            </View>
+                            <Text className='text-sm truncate'>{task.description}</Text>
+                          </View>
+                        </View>
+                      ))
+                    }
+
+                  </View>
                 </View>
-                <Text className='text-sm truncate'>任务描述任务描述任务描述任务描述任务描述任务描述任务描述任务描述</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+              </>
+            ) : ''
+          }
+        </Skeleton>
       </View>
 
+      {/* 课程 */}
       <View className='index__course'>
         <View className='index__course-title'>
           <Text>精品课程</Text>

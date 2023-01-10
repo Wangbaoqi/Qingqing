@@ -1,6 +1,6 @@
 import Taro from "@tarojs/taro";
 import { IResponse } from '@/interface/response';
-import { login } from "../../service/user";
+import { login } from "@/service/user";
 
 
 let isRefreshToken = false;
@@ -84,6 +84,10 @@ request.get = (url: string, data?: object) => {
 
 request.post = (url: string, data?: object) => {
   return request({ url, data, method: "POST" });
+};
+
+request.del = (url: string, data?: object) => {
+  return request({ url, data, method: "DELETE" });
 };
 
 export default request;

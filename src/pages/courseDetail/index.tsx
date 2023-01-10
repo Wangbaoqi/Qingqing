@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { useEffect } from 'react'
+import { View } from '@tarojs/components'
 import { useDidHide, useDidShow, useError, useReady, useRouter } from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/hooks/index'
 
 import {
   Image,
   Skeleton,
-  CellGroup,
-  Field,
   Tag,
 } from '@antmjs/vantui';
 

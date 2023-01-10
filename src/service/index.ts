@@ -1,6 +1,10 @@
 import Api from '@/config/api';
 import request from '@/utils/request/http';
 
+import { ITaskDetail } from './../interface/task.d';
+import { IResponse } from '@/interface/response';
+import { ICourseDetail } from '@/interface/course';
+
 export const getTest = () => {
   return request.get(Api.testApi)
 }
@@ -20,9 +24,9 @@ export const getCourseList = () => {
   })
 }
 
-export const getCourseDetail = (courseId: string) => {
+export const getCourseDetail = (taskId: string) => {
   return new Promise((resolve, reject) => {
-    request.get(`${Api.getStudentCourseDetail}/${courseId}`)
+    request.get(`${Api.getStudentTaskDetail}/${taskId}`)
       .then(res => {
         const { data, success } = res;
         if (success && data) {
@@ -48,7 +52,21 @@ export const getTaskList = (params = {}) => {
         reject(err)
       })
   })
-  // return request.get('https://www.fastmock.site/mock/5de1c2a1ac597ba6eeadef0fae7ef56b/qin/taskList')
+}
+
+export const getTaskDetail = (params = {}) => {
+  return new Promise((resolve, reject) => {
+    request.get(Api.getStudentTasks, params)
+      .then(res => {
+        const { data, success } = res;
+        if (success && data) {
+          resolve(data)
+        }
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
 }
 
 export const getEvaluation = (params = {}) => {
@@ -80,9 +98,6 @@ export const submitEvaluation = (params = {}) => {
         reject(err)
       })
   })
-  // return request.post(Api.submitStudentEvaluation, data)
 }
-
-
 
 

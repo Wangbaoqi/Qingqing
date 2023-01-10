@@ -62,7 +62,6 @@
   &__account {
     border-radius: $border-radius-lg;
     background: $white;
-
     .van-skeleton__row {
       margin-top: 10px;
       width: 50% !important;
@@ -86,6 +85,10 @@
       left: 170px;
       width: calc(100% - 220px);
       height: 136px;
+    }
+
+    .van-skeleton__row {
+      margin-top: 10px;
     }
   }
 

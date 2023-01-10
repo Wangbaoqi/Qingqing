@@ -81,13 +81,13 @@ export default function My() {
       <View className='my__card p-5 mb-5'>
         {
           userInfo ?
-              <View className='my__info flex item-center gap-6'>
-                <Text className='my__info-name text-5xl font-medium'>{userInfo.studentName && userInfo.studentName[userInfo.studentName.length-2]}</Text>
-                <View className='flex flex-column gap-2'>
-                  <Text className='text-3xl font-medium'>{ userInfo.studentName}</Text>
-                  <Text className='text-sm'>{userInfo.id}</Text>
-                </View>
-              </View> :
+            <View className='my__info flex item-center gap-6'>
+              <Text className='my__info-name text-5xl font-medium'>{userInfo.studentName && userInfo.studentName[userInfo.studentName.length-1]}</Text>
+              <View className='flex flex-column gap-2'>
+                <Text className='text-3xl font-medium'>{ userInfo.studentName}</Text>
+                <Text className='text-sm'>{userInfo.id}</Text>
+              </View>
+            </View> :
             (
               <View className='flex item-center gap-6' onClick={onNavigateToAccountList}>
                 <Image src={images[0]} round fit='cover' width='50px' height='50px' />
