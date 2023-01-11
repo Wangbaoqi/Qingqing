@@ -2,9 +2,11 @@ export interface ITask {
   willTaskList: ITaskItem[];
   doneTaskList: ITaskItem[];
   taskDetail: ITaskDetail,
+  currentTask: ITaskItem,
   taskEvaluation: IEvaluations,
   studentMissionId?: string,
-  status: string;
+  status?: string;
+  doneStatus?: string
 }
 
 export interface ITaskItem {
@@ -169,8 +171,20 @@ export interface IShowList {
    * 展示id
    */
   id?: number;
+
+  fileList?: IFile[];
 }
 
+export interface IFile {
+  id?: number;
+  previewUri?: string;
+  url?: string;
+  status?: string;
+  message?: string;
+  size?: number;
+  thumb?: string;
+  type?: string;
+}
 
 /**
  * 学生任务评价概览
@@ -213,7 +227,11 @@ export interface ITaskEvaluations {
   /**
    * 评价结果
    */
-  result?: string;
+  result?: string | null;
+
+  star?: number;
+
+  score: string;
 }
 
 /**

@@ -61,12 +61,9 @@ export default function Login() {
       studentName: studentName.trim()
     }).then(res => {
       Taro.hideLoading();
-      console.log(res,'ddd');
       dispatch(getUserInfoAsync())
-
       Taro.navigateBack();
       console.log(res);
-
     }).catch(err => {
       console.log(err, 'bind student error');
       Taro.hideLoading();

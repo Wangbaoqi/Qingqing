@@ -25,14 +25,18 @@ export const courseSlice = createSlice({
     },
     saveCourseLoading: (state) => {
       state.status = 'loading'
-    }
+    },
+    saveCourseIdle: (state) => {
+      state.status = 'idle'
+    },
   }
 })
 
 export const {
   saveCourseList,
   saveCourseDetail,
-  saveCourseLoading
+  saveCourseLoading,
+  saveCourseIdle
 } = courseSlice.actions;
 
 export const saveCourseListAsync = () => async (dispatch) => {
@@ -40,6 +44,7 @@ export const saveCourseListAsync = () => async (dispatch) => {
     dispatch(saveCourseLoading());
     const courseList = await getCourseList()
     dispatch(saveCourseList(courseList))
+    dispatch(saveCourseIdle())
   } catch (error) {
     console.log(error, 'Save Course List error');
   }
@@ -47,9 +52,11 @@ export const saveCourseListAsync = () => async (dispatch) => {
 
 export const saveCourseDetailAsync = (courseId: string) => async (dispatch) => {
   try {
+    console.log('course slice');
     dispatch(saveCourseLoading());
     const courseDetail = await getCourseDetail(courseId)
     dispatch(saveCourseDetail(courseDetail))
+    dispatch(saveCourseIdle())
   } catch (error) {
     console.log(error, 'Save Course List error');
   }

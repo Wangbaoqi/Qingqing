@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "@tarojs/components";
-import { useDidHide, useDidShow, useReady } from "@tarojs/taro";
+import Taro, { useDidHide, useDidShow, useReady } from "@tarojs/taro";
 import { Button, Image, Tag, Uploader, Rate, Skeleton } from "@antmjs/vantui";
 import { useAppDispatch, useAppSelector } from "@/hooks/index";
 import {
@@ -8,11 +8,13 @@ import {
   selectTaskStatus,
   selectEvaluation,
   selectStudentMissionId,
-  getTaskEvaluationAsync
+  getTaskEvaluationAsync,
+  selectCurrentTask
 } from "@/reducers/taskSlice";
 import { getPeriodZh, getClassZh, getSceneZh } from "@/utils/enum";
 import { uploadMissMedia } from "@/service/file";
 import { submitEvaluation } from "@/service/index";
+import { IShowList, ITaskEvaluations } from "@/interface/task";
 
 import "./index.scss";
 
@@ -21,63 +23,122 @@ export default function Evaluation() {
   const taskDetail = useAppSelector(selectTaskDetail);
   const studentMissionId = useAppSelector(selectStudentMissionId);
   const taskEvaluate = useAppSelector(selectEvaluation);
+  const currentTask = useAppSelector(selectCurrentTask)
   const taskLoading = useAppSelector(selectTaskStatus) === "loading";
-
   useEffect(() => {
     dispatch(getTaskEvaluationAsync(studentMissionId));
   }, [dispatch, studentMissionId]);
 
+  const [showList, setShowList] = useState<IShowList[]>([]);
+  const [evaluateList, setEvaluateList] = useState<ITaskEvaluations[]>([]);
+  const [scoreEnum, setScoreEnum] = useState({})
+  const starTexts = taskEvaluate.evaluateLevel ?? {};
+
   useEffect(() => {
+    const level = taskEvaluate.evaluateLevel;
 
-    // const showList = (taskDetail.showList ?? []).map((task = {}) => {
-    //   const show =
-    //   return {
-    //     ...task,
-    //   }
-    // })
-
-  }, [taskDetail.showList]);
-
-  const [star, setStar] = useState(5);
-  const starText = ["不合", "合格", "一般", "良好", "优秀"];
-
-  const showList = [
-    {
-      "content":"过程记录",
-      "description":"1、上传过程记录视频（总长共1分钟，可以是最多3段视频）2、上传过程照片（1-3张）",
-      "id": "1611190105675038722",
-      fileList: [],
-      deletable: true
-    },
-    {
-      "content":"成果展示",
-      "description":"上传成果照片一张",
-      "id": "1611190105675038723",
-      fileList: [],
-      deletable: true
+    for (const key in level) {
+      if (Object.prototype.hasOwnProperty.call(level, key)) {
+        switch (key) {
+          case 'unqualified':
+            scoreEnum[`1`] = key;
+            break;
+          case 'qualified':
+            scoreEnum[`2`] = key;
+            break;
+          case 'commonly':
+            scoreEnum[`3`] = key;
+            break;
+          case 'good':
+            scoreEnum[`4`] = key;
+            break;
+          case 'excellent':
+            scoreEnum[`5`] = key;
+            break;
+        }
+      }
     }
-  ]
 
-  const [processList, setProcessList] = useState([]);
+    const findStar = (target) => {
+      const values: number[] = Object.values(scoreEnum);
+      const index = values.findIndex(val => target === val);
+      return index && index !== -1  ? index + 1 : -1;
+    }
 
-  const afterRead = event => {
-    const { file, name } = event.detail;
+    const newShowList = (taskDetail.showList ?? []).map((task = {}) => {
+      return {
+        ...task,
+        fileList: []
+      }
+    })
+    const newEvaluations = (taskEvaluate.evaluations ?? []).map((evl) => {
+      console.log(findStar(evl.result), 'findStar');
 
-    uploadMissMedia(file.url).then(res => {
-      console.log(res.data, "upload data");
-    });
-    // 可在此处新增云上传图片操作
-    setProcessList(processList.concat(file));
+      return {
+        ...evl,
+        score: evl.result || 'good',
+        star: evl.result ? findStar(evl.result) : 4
+      }
+    })
+    setScoreEnum(scoreEnum)
+    setShowList(newShowList);
+    setEvaluateList(newEvaluations);
+  }, [taskDetail.showList, taskEvaluate.evaluations, scoreEnum, taskEvaluate.evaluateLevel]);
+
+
+  const afterRead = (event, task, idx: number) => {
+    const { file } = event.detail;
+    console.log('afterRead', event.detail, task);
+    const current = {
+      ...file,
+      status: 'uploading',
+      message: '上传中...'
+    }
+    setShowList(prevList => {
+      prevList[idx].fileList = prevList[idx].fileList?.concat(current)
+      return [...prevList]
+    })
+    uploadMissMedia(file.url)
+      .then(res => {
+        console.log(res.data, "upload data");
+        if (res.data) {
+          const currentSuccess = {
+            ...file,
+            ...res.data,
+            status: 'done',
+            message: '上传成功'
+          }
+          setShowList(prevList => {
+            prevList[idx].fileList = []
+            prevList[idx].fileList = prevList[idx].fileList?.concat(currentSuccess)
+            return [...prevList]
+          })
+        } else {
+          const currentFail = {
+            ...file,
+            status: 'failed',
+            message: '上传失败'
+          }
+          setShowList(prevList => {
+            prevList[idx].fileList = []
+            prevList[idx].fileList = prevList[idx].fileList?.concat(currentFail)
+            return [...prevList]
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err, 'upload error');
+      })
   };
 
-  const deleteAction = event => {
+  const deleteAction = (event, task, idx: number) => {
     const { index } = event.detail;
-    const valueNew = JSON.parse(JSON.stringify(processList));
-    valueNew.splice(index, 1);
-    setProcessList(valueNew);
+    setShowList(prevList => {
+      prevList = JSON.parse(JSON.stringify(prevList))
+      prevList[idx].fileList?.splice(index, 1)
+      return [...prevList]
+    })
   };
-
-  useEffect(() => {}, []);
 
   useReady(() => {});
 
@@ -85,28 +146,50 @@ export default function Evaluation() {
 
   useDidHide(() => {});
 
-  const pp = {
-    studentMissionId: "1611419475922677762",
-    recordShow: {
-      "1611190105675038722":
-        "http://47.98.186.0:9000/ai-edu-file/image/20230110/YQRqMKCTAN6b0d783e2795b4aef0cd60bed69ea54d0b_20230110181835a3f5f/YQRqMKCTAN6b0d783e2795b4aef0cd60bed69ea54d0b_20230110181835a3f5f.png"
-    },
-    evaluateRes: { 观点: "excellent" }
+  const onSetStar = (val, idx) => {
+    setEvaluateList(prevList => {
+      prevList[idx].star = val;
+      prevList[idx].score = scoreEnum[val]
+      return [...prevList]
+    })
   };
 
   const submitEvaluate = () => {
+    Taro.showLoading({
+      title: '请稍后...'
+    })
+    const recordShow = {};
+    const evaluateRes = {};
+    showList.map((show) => {
+      recordShow[`${show.id}`] = (show.fileList??[])[0].previewUri
+    })
+    evaluateList.map((evl) => {
+      evaluateRes[`${evl.dimension}`] = evl.score
+    })
     const param = {
-      studentMissionId: "1611419475922677762",
-      recordShow: {
-        [`1611190105675038722`]: "http://47.98.186.0:9000/ai-edu-file/image/20230110/YQRqMKCTAN6b0d783e2795b4aef0cd60bed69ea54d0b_20230110181835a3f5f/YQRqMKCTAN6b0d783e2795b4aef0cd60bed69ea54d0b_20230110181835a3f5f.png"
-      },
-      evaluateRes: {
-        观点: "excellent"
-      }
+      studentMissionId,
+      recordShow,
+      evaluateRes
     };
-    submitEvaluation(param).then(res => {
-      console.log(res, "dddd");
-    });
+    submitEvaluation(param)
+      .then(success => {
+        console.log(success, "dddd");
+        Taro.hideLoading();
+        if (success) {
+          Taro.showToast({
+            icon: 'success',
+            title: '评价成功'
+          })
+        } else {
+          Taro.showToast({
+            icon: 'error',
+            title: '评价失败'
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err, 'submitEvaluation error');
+      })
   };
 
   return (
@@ -138,16 +221,19 @@ export default function Evaluation() {
         </View>
       </View>
       <Skeleton title row={5} loading={taskLoading}>
-        {(taskDetail.showList ?? []).map((task, idx) => (
+        {(showList ?? []).map((task, idx) => (
           <View className='evaluation__card mb-5' key={`task#${idx}`}>
             <View className='p-5 text-xl font-medium'>{task.content}</View>
             <View className='p-5 text-base pt-0'>
               <View>{task.description}</View>
               <View className='mt-5'>
                 <Uploader
-                  fileList={processList}
-                  onAfterRead={afterRead}
-                  onDelete={deleteAction}
+                  fileList={task.fileList}
+                  onAfterRead={(e) => afterRead(e, task, idx)}
+                  onDelete={(e) => deleteAction(e, task, idx)}
+                  maxCount={1}
+                  compressed
+                  max-size={2048}
                   deletable
                 />
               </View>
@@ -160,19 +246,21 @@ export default function Evaluation() {
         <Skeleton title row={5} loading={taskLoading}>
           <View className='p-5 text-xl font-medium'>主观评价</View>
           <View className='p-5 pt-0'>
-            {(taskDetail.evaluateList ?? {}).map((ev, idx) => (
+            {(evaluateList ?? []).map((ev, idx) => (
               <View className='mb-5' key={`eval#${idx}`}>
-                <View className='flex item-center gap-5 mb-5'>
+                <View className='flex item-center gap-5 mb-5 pl-5 pr-5'>
                   <Text className='text-xl font-medium mt-2 mr-10'>
                     {ev.dimension}
                   </Text>
                   <Rate
-                    value={star}
+                    value={ev.star}
                     color='#ffd21e'
-                    onChange={e => setStar(e.detail)}
+                    disabled={!!ev.result}
+                    disabledColor='#ffd21e'
+                    onChange={e => onSetStar(e.detail, idx)}
                   />
                   <Text className='text-base font-medium mt-2'>
-                    {starText[star - 1]}
+                    {starTexts[ev.score]}
                   </Text>
                 </View>
                 <Text className='text-base'>{ev.description}</Text>
@@ -181,9 +269,15 @@ export default function Evaluation() {
           </View>
         </Skeleton>
       </View>
-      <Button block color='#0DB336' className='mb-10' onClick={submitEvaluate}>
-        提交
-      </Button>
+      {
+        taskLoading ? '' : (
+          currentTask.missionEvaluateStatus === 'COMPLETED' ? '' : (
+            <Button block color='#0DB336' className='mb-10' onClick={submitEvaluate}>
+              提交
+            </Button>
+          )
+        )
+      }
     </View>
   );
 }

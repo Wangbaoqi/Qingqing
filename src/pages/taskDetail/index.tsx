@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { View } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady, useRouter } from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/hooks/index'
-import { selectTaskDetail, selectTaskStatus, getTaskDetailAsync } from '@/reducers/taskSlice'
+import { selectTaskDetail, selectTaskStatus, getTaskDetailAsync, selectCurrentTask } from '@/reducers/taskSlice'
 import {
   Button,
   Image,
@@ -17,60 +17,14 @@ export default function TaskDetail() {
   const { params = {} } = useRouter();
   const dispatch = useAppDispatch();
   const taskDetail = useAppSelector(selectTaskDetail);
+  const currentTask = useAppSelector(selectCurrentTask);
   const taskLoading = useAppSelector(selectTaskStatus) === 'loading';
   const { tid = '', sid = '' } = params;
-
-  const images = [
-    'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
-    'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',
-    'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
-  ]
-
-  console.log(taskLoading, 'courseLoading');
 
   useEffect(() => {
     dispatch(getTaskDetailAsync(tid, sid))
   }, [dispatch, tid, sid])
 
-
-  const taskDetails = {
-    img: 'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
-    name: '教学任务完成篮球课',
-    description: '任务的详细的描述发货地舒服我和防抖的点击的反对方和对方很多事烦得很死',
-    time: '20分钟',
-    classification: '校内教学活动',
-    period: '2-4年级',
-    scene: '日常生活类',
-    expand: {
-			"description":"关于机器人使用的步骤描述",
-			"device":"机器人套件",
-			"id":"1607560934612709378",
-			"stepList":[
-				{
-					"description":"打开机器人开关",
-					"fileUrl":"http://47.98.186.0:9000/ai-edu-file/image/20221227/2917_202212271015114825b/2917_202212271015114825b.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ai-edu%2F20221227%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221227T021530Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=48c32fab13f5449f022f88a08536f015da2234a2517960e9c57cac5139073041",
-					"id":"1607560934868561922",
-					"sequence":1
-				},
-				{
-					"description":"输入指令",
-					"fileUrl":"http://47.98.186.0:9000/ai-edu-file/image/20221227/5358_202212271015157d388/5358_202212271015157d388.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ai-edu%2F20221227%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221227T021527Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=4dc963facdbb9c26999ca9d1b191d94e099c95960a18906f053ed5bd9cd193db",
-					"id":"1607560934868561923",
-					"sequence":2
-				},
-				{
-					"description":"发射子弹",
-					"fileUrl":"http://47.98.186.0:9000/ai-edu-file/image/20221227/5504_2022122710151984572/5504_2022122710151984572.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ai-edu%2F20221227%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221227T021527Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=913754d6f289dfdcab7356b5b6a233f5108326511e83f869af1a614611c4c8f1",
-					"id":"1607560934868561924",
-					"sequence":3
-				}
-			]
-		},
-  }
-
-  useEffect(() => {
-
-  }, [])
 
   useReady(() => { })
 
@@ -144,7 +98,7 @@ export default function TaskDetail() {
       </View>
 
       <Button color='#0DB336' block className='mb-10' onClick={() => navigateToEvaluate()}>
-        去评价
+        { currentTask.missionEvaluateStatus === 'COMPLETED' ? '查看评价' : '去评价' }
       </Button>
     </View>
   )

@@ -16,6 +16,8 @@ export const getCourseList = () => {
         const { data, success } = res;
         if (success && data) {
           resolve(data)
+        } else {
+          resolve([])
         }
       })
       .catch(err => {
@@ -24,13 +26,15 @@ export const getCourseList = () => {
   })
 }
 
-export const getCourseDetail = (taskId: string) => {
+export const getCourseDetail = (courseId: string) => {
   return new Promise((resolve, reject) => {
-    request.get(`${Api.getStudentTaskDetail}/${taskId}`)
+    request.get(`${Api.getStudentCourseDetail}/${courseId}`)
       .then(res => {
         const { data, success } = res;
         if (success && data) {
           resolve(data)
+        } else {
+          resolve({})
         }
       })
       .catch(err => {
@@ -46,6 +50,8 @@ export const getTaskList = (params = {}) => {
         const { data, success } = res;
         if (success && data) {
           resolve(data)
+        } else {
+          resolve([])
         }
       })
       .catch(err => {
@@ -54,13 +60,15 @@ export const getTaskList = (params = {}) => {
   })
 }
 
-export const getTaskDetail = (params = {}) => {
+export const getTaskDetail = (taskId: string) => {
   return new Promise((resolve, reject) => {
-    request.get(Api.getStudentTasks, params)
+    request.get(`${Api.getStudentTaskDetail}/${taskId}`)
       .then(res => {
         const { data, success } = res;
         if (success && data) {
           resolve(data)
+        } else {
+          resolve({})
         }
       })
       .catch(err => {
@@ -76,6 +84,8 @@ export const getEvaluation = (params = {}) => {
         const { data, success } = res;
         if (success && data) {
           resolve(data)
+        } else {
+          resolve({})
         }
       })
       .catch(err => {
@@ -89,10 +99,8 @@ export const submitEvaluation = (params = {}) => {
   return new Promise((resolve, reject) => {
     request.post(Api.submitStudentEvaluation, params)
       .then(res => {
-        const { data, success } = res;
-        if (success && data) {
-          resolve(data)
-        }
+        const { success } = res;
+        resolve(success)
       })
       .catch(err => {
         reject(err)

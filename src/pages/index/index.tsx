@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/index'
 import { getPeriodZh, getClassZh, getSceneZh } from '@/utils/enum';
 import { getUserInfoAsync, selectUserInfo, selectUserStatus } from '@/reducers/userSlice';
 import { saveCourseListAsync, selectCourseList, selectCourseStatus } from '@/reducers/courseSlice';
-import { selectWillTaskList, getTaskListAsync, selectTaskStatus } from '@/reducers/taskSlice';
+import { selectWillTaskList, getTaskListAsync, selectTaskStatus, setCurrentTask } from '@/reducers/taskSlice';
 
 import defaultImg from '@/images/default.jpg';
 import './index.scss'
@@ -27,6 +27,10 @@ export default function Index() {
   const courseLoading = useAppSelector(selectCourseStatus) === 'loading';
   const userLoading = useAppSelector(selectUserStatus) === 'loading'
   const taskLoading = useAppSelector(selectTaskStatus) === 'loading'
+
+  console.log(courseLoading, 'courseLoading');
+  console.log(userLoading, 'userLoading');
+  console.log(taskLoading, 'taskLoading');
 
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
@@ -43,6 +47,12 @@ export default function Index() {
     userInfo && dispatch(getTaskListAsync('TO_BE_COMPLETED'))
   }, [userInfo, dispatch])
 
+  useEffect(() => {
+
+  }, [])
+
+
+
   useReady(() => { })
 
   useDidShow(() => {})
@@ -51,7 +61,12 @@ export default function Index() {
 
   const onChange = (e) => { }
 
-  const navigateToTaskDetail = ({id, studentMissionId}) => {
+  const navigateToTaskDetail = (task) => {
+    const { id, studentMissionId } = task;
+    dispatch(setCurrentTask(task))
+    Taro.navigateTo({
+      url: `/pages/taskDetail/index?tid=${id}&sid=${studentMissionId}`
+    })
     Taro.navigateTo({
       url: `/pages/taskDetail/index?tid=${id}&sid=${studentMissionId}`
     })
@@ -139,7 +154,7 @@ export default function Index() {
                   <View className='index__task-box'>
                     {
                       willTaskList.map((task, idx) => (
-                        <View key={`task#${idx}`} className='index__task-item pl-5 pr-5 flex gap-5 relative' onClick={() => navigateToTaskDetail(task)}>
+                        <View key={`task#${idx}`} className='index__task-item pl-5 pr-5 mb-5 flex gap-5 relative' onClick={() => navigateToTaskDetail(task)}>
                           <Image
                             src={task.backgroundImageFileUrl || defaultImg}
                             radius='8' fit='cover' width='68px' height='68px'

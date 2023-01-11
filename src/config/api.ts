@@ -19,7 +19,6 @@ export default {
   getStudentEvaluation: `${miniApp}/student/evaluation`,
   submitStudentEvaluation: `${miniApp}/student/evaluate`,
   refreshToken: `${auth}/refreshToken`,
-
   uploadFile: `${file}/upload`,
   deleteFile: `${file}/delete`,
 

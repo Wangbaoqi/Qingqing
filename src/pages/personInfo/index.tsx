@@ -6,10 +6,15 @@ import {
   Cell,
   CellGroup,
 } from '@antmjs/vantui'
+import { selectUserInfo } from '@/reducers/userSlice'
+import { useAppDispatch, useAppSelector } from '@/hooks/index'
 
 import './index.scss'
 
 export default function PersonInfo() {
+
+  const dispatch = useAppDispatch();
+  const userInfo = useAppSelector(selectUserInfo);
 
   const myInfo = {
     avatarId: 1,
