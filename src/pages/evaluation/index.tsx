@@ -65,10 +65,15 @@ export default function Evaluation() {
       return index && index !== -1  ? index + 1 : -1;
     }
 
-    const newShowList = (taskDetail.showList ?? []).map((task = {}) => {
+    const newShowList = (taskDetail.showList ?? []).map((task) => {
+
+      let url = '';
+      if (Array.isArray(taskEvaluate.missionShows)) {
+        url = taskEvaluate.missionShows.find(m => m.id === task.id).description || ''
+      }
       return {
         ...task,
-        fileList: []
+        fileList: url ? [{url}] : []
       }
     })
     const newEvaluations = (taskEvaluate.evaluations ?? []).map((evl) => {
@@ -83,7 +88,7 @@ export default function Evaluation() {
     setScoreEnum(scoreEnum)
     setShowList(newShowList);
     setEvaluateList(newEvaluations);
-  }, [taskDetail.showList, taskEvaluate.evaluations, scoreEnum, taskEvaluate.evaluateLevel]);
+  }, [taskDetail.showList, taskEvaluate, scoreEnum]);
 
 
   const afterRead = (event, task, idx: number) => {
@@ -139,6 +144,11 @@ export default function Evaluation() {
       return [...prevList]
     })
   };
+
+  const afterError = (err) => {
+    console.log(err, 'afterError');
+
+  }
 
   useReady(() => {});
 
@@ -231,6 +241,7 @@ export default function Evaluation() {
                   fileList={task.fileList}
                   onAfterRead={(e) => afterRead(e, task, idx)}
                   onDelete={(e) => deleteAction(e, task, idx)}
+                  onError={afterError}
                   maxCount={1}
                   compressed
                   max-size={2048}

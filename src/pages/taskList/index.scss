@@ -1,1 +1,10 @@
-@import '../task/index.scss'
+@import '../task/index.scss';
+
+
+
+.task-list {
+
+  &__none {
+    height: calc(100vh - 52px);
+  }
+}

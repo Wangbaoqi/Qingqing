@@ -23,8 +23,6 @@ export default function CourseDetail() {
   const { params = {} } = useRouter();
   const { cid = '' } = params;
 
-  console.log(courseDetail, 'courseDetail');
-  console.log(courseLoading, 'courseLoading');
 
   useEffect(() => {
     dispatch(saveCourseDetailAsync(cid))

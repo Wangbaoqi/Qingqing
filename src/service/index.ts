@@ -1,10 +1,6 @@
 import Api from '@/config/api';
 import request from '@/utils/request/http';
 
-import { ITaskDetail } from './../interface/task.d';
-import { IResponse } from '@/interface/response';
-import { ICourseDetail } from '@/interface/course';
-
 export const getTest = () => {
   return request.get(Api.testApi)
 }

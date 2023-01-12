@@ -6,21 +6,25 @@
   &__course {
     border-radius: $border-radius-lg;
     background: $white;
+    &-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      padding: 20px;
+    }
     &-content {
-      padding: 40px 20px;
+      padding: 0 20px;
     }
-    &-item {
-      margin-bottom: 12px;
-    }
+
     &-info {
       padding: 10px 0;
+      box-sizing: border-box;
+      height: 120px;
     }
     &-name {
       font-size: $font-size-md;
     }
     &-detail {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       font-size: $font-size-xs;
       margin-top: 10px;

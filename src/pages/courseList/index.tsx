@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
-import { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
   Image,
@@ -8,72 +8,22 @@ import {
   Field,
   Row,
   Col,
+  Loading,
+  Tag,
 } from '@antmjs/vantui'
+import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { saveCourseListAsync, selectCourseList } from '@/reducers/courseSlice';
+import { getPeriodZh } from '@/utils/enum';
+import defaultImg from '@/images/default.jpg';
 
 
 import './index.scss'
 
 export default function CourseList() {
 
-  const courses = [
-    {
-      title: '这是一门精品课程',
-      img: 'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '旺达浪',
-      category: '数学'
-    },
-    {
-      title: '这是一门数学课程',
-      img: 'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '钢铁侠',
-      category: '脑学'
-    },
-    {
-      title: '这是一门语文课程',
-      img: 'https://seopic.699pic.com/photo/50105/4228.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '美国队长',
-      category: '数学'
-    },
-    {
-      title: '这是一门英语课程',
-      img: 'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '鹰眼',
-      category: '数学'
-    },
-    {
-      title: '这是一门历史课程',
-      img: 'https://seopic.699pic.com/photo/50081/3827.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '蜘蛛侠',
-      category: '蜘学'
-    },
-    {
-      title: '这是一门历史课程',
-      img: 'https://seopic.699pic.com/photo/50081/3827.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '蜘蛛侠',
-      category: '蜘学'
-    },{
-      title: '这是一门历史课程',
-      img: 'https://seopic.699pic.com/photo/50081/3827.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '蜘蛛侠',
-      category: '蜘学'
-    },{
-      title: '这是一门历史课程',
-      img: 'https://seopic.699pic.com/photo/50081/3827.jpg_wh1200.jpg',
-      time: '2小时10分钟',
-      author: '蜘蛛侠',
-      category: '蜘学'
-    }
-  ]
+  const courseList = useAppSelector(selectCourseList);
 
   useEffect(() => {
-
 
   }, [])
 
@@ -83,24 +33,35 @@ export default function CourseList() {
 
   useDidHide(() => { })
 
+  const onNavigateCourseDetail = useCallback((course) => {
+    Taro.setStorageSync('courseDetail', course)
+    Taro.navigateTo({
+      url: `/pages/courseDetail/index?cid=${course.id}`
+    })
+  }, [])
+
+
   return (
     <View className='course-list'>
       <View className='course-list__course'>
         <View className='course-list__course-content'>
           <Row gutter='30'>
             {
-              courses.map((course, idx) => (
+              courseList.map((course, idx) => (
                 <Col span='12' key={`course${idx}`}>
-                  <View className='course-list__course-item' >
-                    <Image round radius='8' src={course.img} fit='cover' width='100%' height='160px' />
+                  <View className='course-list__course-item' onClick={() => onNavigateCourseDetail(course)}>
+                    <Image round radius='8'
+                      renderLoading={<Loading type='spinner' size='20' vertical></Loading>}
+                      src={course.backgroundImageFileUrl}
+                      fit='cover' width='100%' height='160px'
+                      showError
+                      renderError={<Image round radius='8' fit='cover' width='100%' height='160px' src={defaultImg} />}
+                    />
                     <View className='course-list__course-info'>
-                      <View className='course-list__course-name'>{course.title}</View>
-                      <View className='course-list__course-detail'>
-                        <Text>{course.time}</Text>
-                        <View className='course-list__course-time'>
-                          {/* <Text>{course.time}</Text> */}
-                          <Text>{course.category}</Text>
-                        </View>
+                      <View className='course-list__course-name truncate font-medium'>{course.name}</View>
+                      <View className='course-list__course-detail gap-4'>
+                        <Tag plain color='#39b54a' >{course.duration || '0'}课时</Tag>
+                        <Tag plain color='#1989fa' >{getPeriodZh(course.period)}</Tag>
                       </View>
                     </View>
                   </View>

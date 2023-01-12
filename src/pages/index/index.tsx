@@ -28,10 +28,6 @@ export default function Index() {
   const userLoading = useAppSelector(selectUserStatus) === 'loading'
   const taskLoading = useAppSelector(selectTaskStatus) === 'loading'
 
-  console.log(courseLoading, 'courseLoading');
-  console.log(userLoading, 'userLoading');
-  console.log(taskLoading, 'taskLoading');
-
   const images = [
     'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
     'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',

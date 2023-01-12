@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
@@ -8,24 +7,13 @@ import {
   Cell,
 } from '@antmjs/vantui'
 
-import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { useAppSelector } from '@/hooks/index'
 import { selectUserInfo } from '@/reducers/userSlice';
 
 import './index.scss'
 
 export default function My() {
-  const dispatch = useAppDispatch()
   const userInfo = useAppSelector(selectUserInfo)
-
-  const images = [
-    'https://seopic.699pic.com/photo/50021/9111.jpg_wh1200.jpg',
-    'https://seopic.699pic.com/photo/50063/0401.jpg_wh1200.jpg',
-    'https://seopic.699pic.com/photo/50093/7918.jpg_wh1200.jpg',
-  ]
-
-  useEffect(() => {
-
-  }, [])
 
   useReady(() => { })
 
@@ -33,6 +21,15 @@ export default function My() {
 
   useDidHide(() => { })
 
+  const isLoginUser = () => {
+    if (!userInfo) {
+      Taro.showToast({
+        icon: 'none',
+        title: '请添加账号'
+      })
+      return;
+    }
+  }
 
   const onNavigateToAccountList = () => {
     Taro.navigateTo({
@@ -41,6 +38,7 @@ export default function My() {
   }
 
   const onNavigateToPersonInfo = () => {
+    isLoginUser()
     Taro.navigateTo({
       url:'/pages/personInfo/index'
     })
@@ -53,20 +51,23 @@ export default function My() {
   }
 
   const onNavigateToCourseList = () => {
+    isLoginUser()
     Taro.navigateTo({
       url:'/pages/courseList/index'
     })
   }
 
   const onNavigateToWillTask = () => {
+    isLoginUser()
     Taro.navigateTo({
-      url:'/pages/taskList/index'
+      url:'/pages/taskList/index?type=will'
     })
   }
 
   const onNavigateToDoneTask = () => {
+    isLoginUser()
     Taro.navigateTo({
-      url:'/pages/taskList/index'
+      url: `/pages/taskList/index?type=done`
     })
   }
 
@@ -105,7 +106,7 @@ export default function My() {
           <Col span='6'>
             <View className='my__card-item flex flex-column item-center gap-2' onClick={onNavigateToCourseList}>
               <Icon name='todo-list-o' size='30px' color='#39b54a'></Icon>
-              <Text className='text-sm'>我的课程</Text>
+              <Text className='text-sm'>精品课程</Text>
             </View>
           </Col>
           <Col span='6'>

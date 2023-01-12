@@ -170,7 +170,7 @@ export interface IShowList {
   /**
    * 展示id
    */
-  id?: number;
+  id?: string;
 
   fileList?: IFile[];
 }

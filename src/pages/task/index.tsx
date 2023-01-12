@@ -58,6 +58,12 @@ export default function Task() {
     })
   }
 
+  const onNavigateMore = (type) => {
+    Taro.navigateTo({
+      url: `/pages/taskList/index?type=${type}`
+    })
+  }
+
   return (
     <View className='task'>
       {
@@ -68,7 +74,7 @@ export default function Task() {
                 <View className='task__will mb-5'>
                   <View className='task__will-title flex justify-between item-center text-lg'>
                     <Text>未完成的任务</Text>
-                    <View className='task__will-more text-sm'>
+                    <View className='task__will-more text-sm' onClick={() => onNavigateMore('will')}>
                       <Text>更多</Text>
                       <Icon name='arrow' size='24' className=''></Icon>
                     </View>
@@ -104,7 +110,7 @@ export default function Task() {
                 <View className='task__will mb-5'>
                 <View className='task__will-title flex justify-between item-center text-lg'>
                   <Text>已完成的任务</Text>
-                  <View className='task__will-more text-sm'>
+                  <View className='task__will-more text-sm' onClick={() => onNavigateMore('done')}>
                     <Text>更多</Text>
                     <Icon name='arrow' size='24' className=''></Icon>
                   </View>

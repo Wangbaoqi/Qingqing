@@ -7,26 +7,15 @@ import {
   CellGroup,
 } from '@antmjs/vantui'
 import { selectUserInfo } from '@/reducers/userSlice'
-import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { useAppSelector } from '@/hooks/index'
+import { getGender, getSemester } from '@/utils/enum';
+import defaultImg from '@/images/default.jpg';
 
 import './index.scss'
 
 export default function PersonInfo() {
-
-  const dispatch = useAppDispatch();
   const userInfo = useAppSelector(selectUserInfo);
 
-  const myInfo = {
-    avatarId: 1,
-    avatarUrl: 'https://img.yzcdn.cn/vant/cat.jpeg',
-    birthday: '2012-09-10',
-    className: '三年级5班',
-    gender: '',
-    id: 348204920,
-    parentPhoneNum: '15732123333',
-    studentCode: '43u24u4392',
-    studentName: '张大力'
-  }
 
   useEffect(() => {
 
@@ -42,14 +31,16 @@ export default function PersonInfo() {
     <View className='person-info'>
       <View className='person-info__card p-5'>
         <CellGroup >
-          <Cell title='头像' renderRightIcon={<Image round width='40px' height='40px' src={myInfo.avatarUrl} />} />
-          <Cell title='姓名' value={myInfo.studentName} />
-          <Cell title='账号' value={myInfo.id} />
-          <Cell title='学籍' value={myInfo.studentCode} />
-          <Cell title='生日' value={myInfo.birthday} />
-          <Cell title='性别' value={myInfo.gender} />
-          <Cell title='班级' value={myInfo.className} />
-          <Cell title='家长号码' value={myInfo.parentPhoneNum} border={false} />
+          <Cell title='头像' renderRightIcon={<Image round width='40px' height='40px' src={userInfo.avatarUrl || defaultImg} />} />
+          <Cell title='姓名' value={userInfo.studentName} />
+          <Cell title='账号' value={userInfo.id} />
+          <Cell title='学籍' value={userInfo.studentCode} />
+          <Cell title='生日' value={userInfo.birthday} />
+          <Cell title='性别' value={getGender(userInfo.gender)} />
+          <Cell title='学期' value={getSemester(userInfo.currentSemester)} />
+          <Cell title='年级' value={`${userInfo.currentGrade}年级`} />
+          <Cell title='班级' value={userInfo.className} />
+          <Cell title='家长号码' value={userInfo.parentPhoneNum || '暂无'} border={false} />
         </CellGroup>
       </View>
     </View>

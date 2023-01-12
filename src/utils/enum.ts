@@ -79,3 +79,18 @@ export const getStageTagZh = (type) => {
       break;
   }
 }
+
+
+export const getGender = (type) => {
+  if (type === 'male') {
+    return '男'
+  }
+  return '女'
+}
+
+export const getSemester = (type) => {
+  if (type === 'fall_semester') {
+    return '上学期'
+  }
+  return '下学期'
+}
