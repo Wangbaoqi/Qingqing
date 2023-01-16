@@ -1,26 +1,24 @@
 import { useCallback, useEffect } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
+import { useAppDispatch, useAppSelector } from '@/hooks/index'
+import { selectUserInfo, setUserInfo, getUserInfoAsync, selectUserList } from '@/reducers/userSlice';
+import { wxUnBindStudent } from '@/service/auth';
+
 import {
   Button,
-  Image,
   Tag,
   SwipeCell,
   Icon,
 } from '@antmjs/vantui';
 
-import { useAppDispatch, useAppSelector } from '@/hooks/index'
-import { selectUserInfo, setUserInfo, getUserInfoAsync, selectUserList } from '@/reducers/userSlice';
-import { wxUnBindStudent } from '@/service/auth';
-
 import './index.scss';
 
-export default function AccountList() {
 
+export default function AccountList() {
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector(selectUserInfo)
   const userList = useAppSelector(selectUserList) || Taro.getStorageSync('userList')
-
 
   useEffect(() => {
 
@@ -62,7 +60,6 @@ export default function AccountList() {
      .finally(() => {
         Taro.hideLoading();
       })
-
   }, [dispatch])
 
   return (
@@ -78,7 +75,6 @@ export default function AccountList() {
                 leftWidth={0}
                 renderRight={<Button className='ml-2' type='danger' onClick={() => onUnbindAccount(info)}>删除</Button>}
                 key={`info#${idx}`}
-                // onClick={() => onCheckAccount(info)}
               >
                 <View onClick={() => onCheckAccount(info)} className={`account__item flex item-center gap-6 p-4  mb-4 ${info.studentCode === userInfo.studentCode ? 'account__check' : ''}`} >
                   <Text className='account__item-name text-5xl font-medium'>{info.studentName && info.studentName[info.studentName.length-2]}</Text>

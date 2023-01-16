@@ -43,26 +43,15 @@ export default function Index() {
     userInfo && dispatch(getTaskListAsync('TO_BE_COMPLETED'))
   }, [userInfo, dispatch])
 
-  useEffect(() => {
-
-  }, [])
-
-
-
   useReady(() => { })
 
   useDidShow(() => {})
 
   useDidHide(() => { })
 
-  const onChange = (e) => { }
-
   const navigateToTaskDetail = (task) => {
     const { id, studentMissionId } = task;
     dispatch(setCurrentTask(task))
-    Taro.navigateTo({
-      url: `/pages/taskDetail/index?tid=${id}&sid=${studentMissionId}`
-    })
     Taro.navigateTo({
       url: `/pages/taskDetail/index?tid=${id}&sid=${studentMissionId}`
     })
@@ -99,7 +88,6 @@ export default function Index() {
           autoPlay='0'
           initPage='0'
           paginationVisible
-          onChange={onChange}
         >
           {images.map((item, index) => (
             <SwiperItem key={`swiper#demo1${index}`}>
@@ -172,7 +160,6 @@ export default function Index() {
                         </View>
                       ))
                     }
-
                   </View>
                 </View>
               </>
@@ -196,7 +183,7 @@ export default function Index() {
                       <Image round radius='8'
                         renderLoading={<Loading type='spinner' size='20' vertical></Loading>}
                         src={course.backgroundImageFileUrl}
-                        fit='cover' width='100%' height='160px'
+                        fit='c' width='100%' height='160px'
                         showError
                         renderError={<Image round radius='8' fit='cover' width='100%' height='160px' src={defaultImg} />}
                       />

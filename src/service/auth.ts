@@ -10,7 +10,7 @@ export const wxUserLogin = (param = {}) => {
         if (success && data) {
           resolve(data)
         } else {
-          console.log(data, 'wxUserLogin api error');
+          resolve({})
         }
       })
       .catch(err => {
@@ -28,6 +28,8 @@ export const wxGetStudent = () => {
           Taro.setStorageSync('userList', data)
           Taro.setStorageSync('currentUser', data[0] || null)
           resolve(data)
+        } else {
+          resolve({})
         }
       }).catch(err => {
         reject(err)
@@ -60,9 +62,11 @@ export const wxUnBindStudent = (params = {}) => {
       openId: Taro.getStorageSync('openId')
     })
       .then(res => {
-        const { data, success } = res;
+        const { success } = res;
         if (success) {
           resolve(success)
+        } else {
+          resolve(false)
         }
       })
       .catch(err => {

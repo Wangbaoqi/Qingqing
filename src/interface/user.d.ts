@@ -33,3 +33,27 @@ export interface ILogin {
   openId?: string,
   token?: string
 }
+
+
+/**
+* 微信用户信息
+*/
+export interface IWxUser {
+  /**
+   * openId
+   */
+  openId?: string;
+  /**
+   * Token串
+   */
+  token?: string;
+}
+
+
+/**
+ * SingleResponse«微信用户信息»
+ */
+export interface ILoginResponse {
+  code?: string;
+  errMsg?: string;
+}

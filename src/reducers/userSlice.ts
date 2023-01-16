@@ -43,7 +43,8 @@ export const getUserInfoAsync = () => (dispatch, getState) => {
     })
     .catch(err => {
       console.log(err, 'getUserInfoAsync error');
-    }).finally(() => {
+    })
+    .finally(() => {
       dispatch(saveUserIdle())
     })
 }

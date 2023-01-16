@@ -1,28 +1,8 @@
 import Taro from "@tarojs/taro";
 import { wxUserLogin } from '@/service/auth';
+import { IWxUser, ILoginResponse } from '@/interface/user';
 
 
-/**
- * SingleResponse«微信用户信息»
- */
-export interface LoginResponse {
-  code?: string;
-  errMsg?: string;
-}
-
-/**
-* 微信用户信息
-*/
-export interface UserInfo {
-  /**
-   * openId
-   */
-  openId?: string;
-  /**
-   * Token串
-   */
-  token?: string;
-}
 
 export const checkSession = () => {
   return new Promise((resolve, reject) => {
@@ -57,10 +37,10 @@ export const wxLogin = () => {
 
 export const login = (): Promise<boolean> => {
   return new Promise((resolve, reject) => {
-    return wxLogin().then((res: LoginResponse) => {
+    return wxLogin().then((res: ILoginResponse) => {
       wxUserLogin({
         code: res.code,
-      }).then((user: UserInfo) => {
+      }).then((user: IWxUser) => {
         Taro.setStorageSync('openId', user.openId);
         Taro.setStorageSync('token', user.token);
         resolve(true);

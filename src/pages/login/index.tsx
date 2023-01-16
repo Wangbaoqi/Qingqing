@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import Taro, { useDidHide, useDidShow, useReady } from '@tarojs/taro'
 import {
   Button,
@@ -7,20 +7,17 @@ import {
   CellGroup,
   Field,
 } from '@antmjs/vantui'
+import { wxBindStudent } from '@/service/auth';
+import { useAppDispatch } from '@/hooks/index';
+import { getUserInfoAsync } from '@/reducers/userSlice';
 
-import { wxBindStudent } from '@/service/auth'
-import { useAppDispatch, useAppSelector } from '@/hooks/index'
-import { selectUserInfo, setUserInfo, getUserInfoAsync, selectUserList } from '@/reducers/userSlice';
-
+import logo from '@/images/logo.jpg'
 import './index.scss'
-import logo from '../../images/logo.jpg'
 
 export default function Login() {
-
   const dispatch = useAppDispatch()
   const [studentName, setStudentName] = useState('')
   const [studentCode, setStudentCode] = useState('')
-
 
   useEffect(() => {
 
@@ -32,9 +29,7 @@ export default function Login() {
 
   useDidHide(() => { })
 
-
   const addAccount = () => {
-
     if (!studentCode) {
       Taro.showToast({
         mask: true,
@@ -43,7 +38,6 @@ export default function Login() {
       })
       return;
     }
-
     if (!studentName) {
       Taro.showToast({
         icon: 'none',
@@ -52,7 +46,6 @@ export default function Login() {
       })
       return;
     }
-
     Taro.showLoading({
       title: '正在添加...'
     })
@@ -63,16 +56,18 @@ export default function Login() {
       Taro.hideLoading();
       dispatch(getUserInfoAsync())
       Taro.navigateBack();
-      console.log(res);
     }).catch(err => {
-      console.log(err, 'bind student error');
       Taro.hideLoading();
+      Taro.showToast({
+        icon: 'error',
+        title: '绑定学生失败'
+      })
+      console.log(err, 'bind student error');
     })
   }
 
   return (
     <View className='login'>
-
       <View className='login__card p-5'>
         <View className='flex justify-center item-center flex-column gap-5 pt-10 pb-10'>
           <Image round radius='8px' width='80px' height='80px' src={logo} />
