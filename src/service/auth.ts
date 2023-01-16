@@ -47,6 +47,8 @@ export const wxBindStudent = (params = {}) => {
         const { data, success } = res;
         if (success && data) {
           resolve(success)
+        } else {
+          reject()
         }
       })
       .catch(err => {
