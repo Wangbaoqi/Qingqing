@@ -171,7 +171,7 @@ export interface IShowList {
    * 展示id
    */
   id?: string;
-
+  exhibition?: boolean;
   fileList?: IFile[];
 }
 

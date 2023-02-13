@@ -39,6 +39,9 @@ export default function TaskList() {
     if (userInfo) {
       dispatch(getTaskListAsync(type == 'will' ? 'TO_BE_COMPLETED' : 'COMPLETED'));
     }
+    Taro.setNavigationBarTitle({
+      title: type === 'done' ? '已完成任务' : '未完成任务'
+    })
   }, [dispatch, type, userInfo])
 
 
@@ -72,7 +75,7 @@ export default function TaskList() {
                 </Row>
               ))
             ) : (
-              <View className='task-list__none flex item-start justify-center text-orange-dark text-xl font-medium'>
+              <View className='task-list__none flex item-center justify-center text-orange-dark text-base font-medium'>
                 暂无任务
               </View>
             )

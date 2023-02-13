@@ -1,6 +1,6 @@
 
 
-const apiRoot = 'http://home.smarte.tech:50061/api/v1'
+const apiRoot = 'http://112.74.39.250:8081/api/v1'
 
 const miniApp = `${apiRoot}/miniApp`;
 const auth = `${apiRoot}/auth`;

@@ -33,9 +33,9 @@ export default function TaskDetail() {
   useDidHide(() => { })
 
 
-  const navigateToEvaluate = () => {
+  const navigateToEvaluate = (type) => {
     Taro.navigateTo({
-      url: '/pages/evaluation/index'
+      url: `/pages/evaluation/index?type=${type}`
     })
   }
 
@@ -97,7 +97,7 @@ export default function TaskDetail() {
         </Skeleton>
       </View>
 
-      <Button color='#0DB336' block className='mb-10' onClick={() => navigateToEvaluate()}>
+      <Button color='#0DB336' block className='mb-10' onClick={() => navigateToEvaluate(currentTask.missionEvaluateStatus)}>
         { currentTask.missionEvaluateStatus === 'COMPLETED' ? '查看评价' : '去评价' }
       </Button>
     </View>

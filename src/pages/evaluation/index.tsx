@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "@tarojs/components";
-import Taro, { useDidHide, useDidShow, useReady } from "@tarojs/taro";
+import Taro, { useDidHide, useDidShow, useReady, useRouter } from "@tarojs/taro";
 import { Button, Image, Tag, Uploader, Rate, Skeleton } from "@antmjs/vantui";
 import { useAppDispatch, useAppSelector } from "@/hooks/index";
 import {
@@ -19,12 +19,17 @@ import { IShowList, ITaskEvaluations } from "@/interface/task";
 import "./index.scss";
 
 export default function Evaluation() {
+  const { params = {} } = useRouter();
   const dispatch = useAppDispatch();
   const taskDetail = useAppSelector(selectTaskDetail);
   const studentMissionId = useAppSelector(selectStudentMissionId);
   const taskEvaluate = useAppSelector(selectEvaluation);
   const currentTask = useAppSelector(selectCurrentTask)
   const taskLoading = useAppSelector(selectTaskStatus) === "loading";
+  const { type = ''} = params;
+
+  const isDone = type === 'COMPLETED';
+
   useEffect(() => {
     dispatch(getTaskEvaluationAsync(studentMissionId));
   }, [dispatch, studentMissionId]);
@@ -232,7 +237,10 @@ export default function Evaluation() {
       </View>
       <Skeleton title row={5} loading={taskLoading}>
         {(showList ?? []).map((task, idx) => (
-          <View className='evaluation__card mb-5' key={`task#${idx}`}>
+          <View className='evaluation__card mb-5' key={`task#${idx}`} style={{
+            display: task.exhibition ? 'block' : 'none'
+          }}
+          >
             <View className='p-5 text-xl font-medium'>{task.content}</View>
             <View className='p-5 text-base pt-0'>
               <View>{task.description}</View>
@@ -245,7 +253,7 @@ export default function Evaluation() {
                   maxCount={1}
                   compressed
                   max-size={2048}
-                  deletable
+                  deletable={!isDone}
                 />
               </View>
             </View>
@@ -258,23 +266,25 @@ export default function Evaluation() {
           <View className='p-5 text-xl font-medium'>主观评价</View>
           <View className='p-5 pt-0'>
             {(evaluateList ?? []).map((ev, idx) => (
-              <View className='mb-5' key={`eval#${idx}`}>
-                <View className='flex item-center gap-5 mb-5 pl-5 pr-5'>
-                  <Text className='text-xl font-medium mt-2 mr-10'>
-                    {ev.dimension}
-                  </Text>
-                  <Rate
-                    value={ev.star}
-                    color='#ffd21e'
-                    disabled={!!ev.result}
-                    disabledColor='#ffd21e'
-                    onChange={e => onSetStar(e.detail, idx)}
-                  />
-                  <Text className='text-base font-medium mt-2'>
+              <View className='mb-10' key={`eval#${idx}`}>
+                <View className='flex item-center justify-between gap-5 mb-5 pl-5 pr-5'>
+                  <View className='flex item-center'>
+                    <Text className='text-xl font-medium mt-2 mr-10'>
+                      {ev.dimension}
+                    </Text>
+                    <Rate
+                      value={ev.star}
+                      color='#ffd21e'
+                      disabled={!!ev.result}
+                      disabledColor='#ffd21e'
+                      onChange={e => onSetStar(e.detail, idx)}
+                    />
+                  </View>
+                  <Text className='text-sm mt-2'>
                     {starTexts[ev.score]}
                   </Text>
                 </View>
-                <Text className='text-base'>{ev.description}</Text>
+                <Text className='text-base pl-5 pr-5'>{ev.description}</Text>
               </View>
             ))}
           </View>
