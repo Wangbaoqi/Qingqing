@@ -9,6 +9,7 @@ import {
 
 import { useAppSelector } from '@/hooks/index'
 import { selectUserInfo } from '@/reducers/userSlice';
+import logo from '../../images/logo.jpg'
 
 import './index.scss'
 
@@ -91,7 +92,7 @@ export default function My() {
             </View> :
             (
               <View className='flex item-center gap-6' onClick={onNavigateToAccountList}>
-                <Image src={images[0]} round fit='cover' width='50px' height='50px' />
+                <Image src={logo} round fit='cover' width='50px' height='50px' />
                 <View className='flex flex-column gap-1'>
                   <Text className='text-xl font-medium'>您还没有添加账号</Text>
                   <Text className='text-sm text-green'>去添加账号</Text>
