@@ -1,6 +1,6 @@
 
 
-const apiRoot = 'https://api.aiedu.aosiedu.cn/api/v1'
+const apiRoot = 'https://api.aiedu.rmlabor.cn/api/v1'
 
 const miniApp = `${apiRoot}/miniApp`;
 const auth = `${apiRoot}/auth`;
